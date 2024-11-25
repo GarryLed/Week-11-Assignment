@@ -13,17 +13,52 @@
     </header>
    
       <div>
-          <h2>Chess Player Titles:</h2>
+          <h2>Select Chess Player Titles:</h2>
           <label><input type="checkbox" value="GM" id="grand-master" /> Grand Masters</label><br />
           <label><input type="checkbox" value="WGM" id="womens-grand-master" /> Womens Grand Masters</label><br />
           <label><input type="checkbox" value="IM" id="internatioinal-master" /> International Masters</label><br />
           <label><input type="checkbox" value="WIM" id="womens-international-master" /> Womens International Masters</label><br />
       </div>
 
-      <button id="get-chess-players">Get Players User Names</button>
+      <button id="get-chess-players">Get Players</button>
       <div id="player-titles"></div>
-   
       
+      
+      
+      
+      <div>
+        <h2>Player Profofile</h2>
+        <input type="number" id="humidityInput" placeholder="Enter player username " />
+    </div>
+    <button id="get-player-profiles">Get Player Profile</button>
+   
+    <div>
+      <h2>Player Stats:</h2>
+      <h3>Select Chess Game</h3>
+      <label><input type="checkbox" value="GM" id="grand-master" /> Chess Daily</label><br />
+      <label><input type="checkbox" value="WGM" id="womens-grand-master" /> Rapid Chess</label><br />
+      <label><input type="checkbox" value="IM" id="internatioinal-master" /> Bullet Chess</label><br />
+      <label><input type="checkbox" value="WIM" id="womens-international-master" /> Blitz Chess</label><br />
+  </div>
+  <div>
+    <h3>Player User Name</h3>
+    <input type="number" id="humidityInput" placeholder="Enter player username " />
+</div>
+  <button id="get-player-profiles">Get Player Stats</button>
+ 
+    
+    <div>
+      <h2>Live Chess Streamers per country</h2>
+      <label for="countries">Choose a country:</label>
+<select id="countries" name="countries">
+  <option value="US">United States</option>
+  <option value="UK">United Kingdom</option>
+  <option value="IT">Italy</option>
+  <option value="IE">Ireland</option>
+</select>
+  </div>
+  <button id="get-live-streamers">Find Live Streamers</button>
+  
 
       <script src="script.js"></script>
   </body>

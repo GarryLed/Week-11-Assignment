@@ -23,6 +23,9 @@ const statsUrl = `https://api.chess.com/pub/player/${userName}/stats`;
 
 const userGamesUrl = `https://api.chess.com/pub/player/${userName}/games`;
 
+https://api.chess.com/pub/streamers
+search for a list of streamers that are live right now in a specified cournty 
+
 */
 
 // add event listerners 
@@ -47,4 +50,4 @@ async function fetchPlayerTitles(title) {
 }
 
 // testing the API 
-fetchPlayerTitles(`GM`);
+//fetchPlayerTitles(`GM`);
