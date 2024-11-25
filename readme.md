@@ -1,5 +1,5 @@
-Final assessment Requirements: 
-
+## Final assessment Requirements: 
+### Requirements 
 Final Assignment Part 1 - 20%
 Due Date: Sunday, December 7th @ 23:59
 Submission: Moodle ‘Week 11 Assignment’
@@ -26,8 +26,8 @@ Where necessary, I will have a Q&A with students. Assignment Extension Request f
 
 ==================================================
 TODO's
-- [ ] create a github repo 
-- [ ] pick endpoints and submit for approval by Firday 29th November 
+- [x] create a github repo 
+- [x] pick endpoints and submit for approval by Firday 29th November 
 - [ ] download and render JSON data via an API endpoint or endpoints
 - [ ] dynamically create and style elements to render the data. You cannot use sample code from the Internet.
 - [ ] include on a Word document
@@ -49,18 +49,5 @@ TODO's
  
     ===============================================================
 
-## PEDAC template for solving the problem
 
-### Understanding the Problem 
-**Requirements:**
-
-**Explicit**
-
-**Implicit**
-
-#### Clarifyng Questions 
-
-### Examples / Test Cases 
-
-### Algorithm 
 

@@ -4,12 +4,25 @@
     <meta charset="utf-8">
 
     <title>Final Assignment Part 1</title>
-
-    <link href="https://fonts.googleapis.com/css?family=Faster+One" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+
   </head>
   <body>
+    <header>
+      <h1>Chess.Com API</h1>
+    </header>
+   
+      <div>
+          <h2>Chess Player Titles:</h2>
+          <label><input type="checkbox" value="GM" id="grand-master" /> Grand Masters</label><br />
+          <label><input type="checkbox" value="WGM" id="womens-grand-master" /> Womens Grand Masters</label><br />
+          <label><input type="checkbox" value="IM" id="internatioinal-master" /> International Masters</label><br />
+          <label><input type="checkbox" value="WIM" id="womens-international-master" /> Womens International Masters</label><br />
+      </div>
 
+      <button id="get-chess-players">Get Players User Names</button>
+      <div id="player-titles"></div>
+   
       
 
       <script src="script.js"></script>
