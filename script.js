@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', async function () {
     try {
-        await fetchPlayerTitles();
-        await fetchPlayerProfiles();
+        //await fetchPlayerTitles();
+        //await fetchPlayerProfiles();
+      //await fetchLeaderboards();
     } catch (error) {
         console.error('Oops, an error occured', error);
     }
@@ -58,6 +59,100 @@ async function fetchPlayerTitles(title) {
             //return null;
         }
 }
+/*
+async function fetchLeaderboards()
+{
+    
+    const url = `https://api.chess.com/pub/leaderboards`;
+        
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Error fetching Player for ${title}: ${response.status}`);
+            }
+            const data = await response.json();
+            console.log(data.daily[0].username);
+        } catch (error) {
+            console.error(error);
+            //return null;
+        }
+
+}
+
+    const card = document.createElement('div');
+            card.setAttribute('class', 'card');
+
+            const h1 = document.createElement('h1');
+            h1.textContent = movie.title;
+
+            const p = document.createElement('p');
+            p.textContent = `${movie.description.substring(0, 300)}...`;
+
+            const director = document.createElement('p');
+            director.textContent = 'Director: ' + movie.director;
+
+            const movImg = document.createElement('img');
+            movImg.setAttribute('src', movie.image);
+            movImg.setAttribute('width', '200px');
+            movImg.setAttribute('height', '350px');
+
+            card.appendChild(h1);
+            card.appendChild(p);
+            card.appendChild(director);
+            card.appendChild(movImg);
+            container.appendChild(card);
+*/
+async function fetchLeaderboards() {
+    //const card = document.createElement('div');
+        //card.setAttribute('class', 'card');
+        const leaderboardContainer = document.getElementById('leaderboards');
+        try {
+            const response = await fetch('https://api.chess.com/pub/leaderboards');
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            const data = await response.json();
+        
+            data.daily.forEach(player => {
+                const PlayerElement = document.createElement('div');
+                PlayerElement.setAttribute('class', 'leaderboard-card')
+                PlayerElement.style.border = '1px solid #ddd';
+                PlayerElement.style.padding - '5px';
+            
+                const avatar = document.createElement('img');
+                avatar.setAttribute('src', player.avatar);
+                avatar.setAttribute('width', '200px');
+                avatar.setAttribute('height', '250px');
+                const h1 = document.createElement('h1');
+                h1.textContent = `Rank: ${player.rank}`;
+
+                const h2name = document.createElement('h2');
+                h2name.textContent =   `Name: ${player.name};`
+
+                const h2 = document.createElement('h2');
+                h2.textContent =   `Username: ${player.username};`
+
+                const h2title = document.createElement('h2');
+                h2title.textContent = `Title: ${player.title}`;
+
+                const para1 = document.createElement('p');
+                para1.textContent = `Score: ${player.score}`;
+
+
+                
+                PlayerElement.appendChild(h1);
+                PlayerElement.appendChild(avatar);
+                PlayerElement.appendChild(h2name);
+                PlayerElement.appendChild(h2);
+                PlayerElement.appendChild(h2title);
+                PlayerElement.appendChild(para1);
+                
+                leaderboardContainer.appendChild(PlayerElement);
+            });
+        } catch (error) {
+            console.error('Fetch error:', error);
+            PlayerElement.textContent = 'Could not fetch users: ' + error;
+        }
+}
+
 
 // add an event listener 
 //document.getElementById('get-player-profiles').addEventListener('click', fetchPlayerProfiles)
