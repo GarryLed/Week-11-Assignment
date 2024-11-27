@@ -11,18 +11,17 @@
     <header>
       <h1>Chess.Com API</h1>
     </header>
-   
-    <div>
-      <h2>Player Profiles</h2>
-      <label for="player-profile">Choose a Player:</label>
-<select id="player-id" name="countries">
-  <option value="US">Magnus Carlson</option>
-  <option value="UK">Hikaru Nakamura</option>
-  <option value="IT">Nikolas Theodorou</option>
-  <option value="IE">Arkadiy Khromaev</option>
-</select>
-  </div>
-    <button id="get-player-profiles">Get Player Profile</button>
+
+  <div>
+    <h2>Player Profiles</h2>
+    <h3>Select Players</h3>
+    <label><input type="checkbox" value="" id="" /> Magnus Carlson</label><br />
+    <label><input type="checkbox" value="WGM" id="womens-grand-master" />Hikaru Nakamura</label><br />
+    <label><input type="checkbox" value="IM" id="internatioinal-master" />Nikolas Theodorou</label><br />
+    <label><input type="checkbox" value="WIM" id="womens-international-master" />Arkadiy Khromaev</label><br />
+</div>
+    <button id="get-player-profiles">Get Player Profiles</button>
+    <div id="player-profiles"></div>
    
     <div>
       <h2>Player Stats:</h2>
@@ -34,29 +33,34 @@
   </div>
   <div>
     <h3>Player User Name</h3>
-    <input type="number" id="humidityInput" placeholder="Enter player username " />
-</div>
-  <button id="get-player-profiles">Get Player Stats</button>
- 
-    
-    <div>
-      <h2>Live Chess Streamers</h2>
-      <label for="countries">Choose a country:</label>
+    <label for="countries">Choose a player:</label>
 <select id="countries" name="countries">
-  <option value="US">United States</option>
-  <option value="UK">United Kingdom</option>
-  <option value="IT">Italy</option>
-  <option value="IE">Ireland</option>
+<option value="US">Magnus</option>
+<option value="UK">Hikaru</option>
+<option value="IT">Nikolas</option>
+<option value="IE">Arkadiy</option>
 </select>
-  </div>
-  <div>
-    <h3>Select Streamer Chese Title:</h3>
-    <label><input type="checkbox" value="GM" id="grand-master" /> Grand Master</label><br />
-    <label><input type="checkbox" value="WGM" id="womens-grand-master" /> Womens Grand Master</label><br />
-    <label><input type="checkbox" value="IM" id="internatioinal-master" /> International Master</label><br />
-    <label><input type="checkbox" value="WIM" id="womens-international-master" /> Womens International Master</label><br />
 </div>
-  <button id="get-live-streamers">Find Live Streamers</button>
+  <button id="get-player-stats">Get Player Stats</button>
+  <div id="player-stats"></div>
+ 
+  <div id="streamers">
+    <h2>Chess Streamers List</h2>
+    <p>Display full list of streamers</p>
+  </div>  
+ 
+
+  <div id="leaderboards">
+    <h2>Leaderboards</h2>
+    <label for="countries">Choose a game:</label>
+    <select id="countries" name="countries">
+    <option value="US">Chess Daily</option>
+    <option value="UK">Rapid Chess</option>
+    <option value="IT">Bullet Chess</option>
+    <option value="IE">Blitz Chess</option>
+    </select>
+  </div>
+  <button id="get-lederboards">Get Leaderboards</button>
   
 
       <script src="script.js"></script>

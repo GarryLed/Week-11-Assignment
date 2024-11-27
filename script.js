@@ -1,3 +1,13 @@
+document.addEventListener('DOMContentLoaded', async function () {
+    try {
+        await fetchPlayerTitles();
+        await fetchPlayerProfiles();
+    } catch (error) {
+        console.error('Oops, an error occured', error);
+    }
+});
+
+
 
 // select a root element to append the rest of the content 
 const chessRoot = document.getElementById('root');
@@ -50,7 +60,7 @@ async function fetchPlayerTitles(title) {
 }
 
 // add an event listener 
-document.getElementById('get-player-profiles').addEventListener('click', fetchPlayerProfiles)
+//document.getElementById('get-player-profiles').addEventListener('click', fetchPlayerProfiles)
 
 /**
  * Fetch movie data and display each movie in a card format.
@@ -58,7 +68,7 @@ document.getElementById('get-player-profiles').addEventListener('click', fetchPl
  */
 async function fetchPlayerProfiles() {
     try {
-      const response = await fetch(`https://api.chess.com/pub/player/garyleddy`);
+      //const response = await fetch(`https://api.chess.com/pub/player/garyleddy`);
       const data = await response.json(); // Parses the response as JSON
      console.log(data);
       // Iterate over each movie object and create a card for it
