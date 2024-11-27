@@ -1,3 +1,148 @@
+
+/*
+Breaking the problem down into parts: 
+
+1. Player stats 
+
+Endpoints: 
+
+const statsUrl = `https://api.chess.com/pub/player/${userName}/stats`;
+
+Requirements: 
+
+Inputs: 
+
+
+Outputs: 
+
+
+Clarifying questions: 
+
+Examples: 
+
+
+
+
+Functions: 
+
+fetchPlayerUsername()
+fetchPlayerStats()
+renderPlayerStats()
+
+
+
+==================================
+2. Player titles 
+
+Endpoints: 
+
+const userName = `garyleddy`;
+
+const url = `https://api.chess.com/pub/player/${userName}`; 
+
+const users = ['hikaru', 'garyleddy']; // array to store user names 
+
+Requirements: 
+
+Inputs: 
+
+
+Outputs: 
+
+
+Clarifying questions: 
+
+Examples: 
+
+
+
+
+Functions: 
+
+fetchPlayerTitles()
+fetchPlayerUsername()
+renderPlayerProfiles()
+
+
+
+====================================
+3. Leaderboards 
+
+Endpoints: 
+
+Requirements: 
+
+Inputs: 
+
+
+Outputs: 
+
+
+Clarifying questions: 
+- Should I create functions to render each chess game or can I use one function and pass in game name?
+ - I'll start by creating individual functions to get the code to work and I can refactor if need be 
+
+Examples: 
+
+
+
+
+Functions: 
+
+fetchLeaderboards()
+renderLeaderboards()
+renderBlitzLeaderboard()
+renderBulletLeaderboard()
+renderRapidLeaderboard()
+renderChessDailyLeaderboard()
+fetchPlayerProfile()
+fetchPlayerCountry()
+fetchPlayerStats()
+fetchPlayerTitle()
+
+
+
+
+
+==================================
+4. Streamers 
+
+Endpoints: 
+
+https://api.chess.com/pub/streamers
+search for a list of streamers that are live right now in a specified cournty 
+
+Requirements: 
+
+Inputs: 
+
+
+Outputs: 
+
+
+Clarifying questions: 
+- how will I determine which country a streamer is from? 
+  - each player profile has a country and country code 
+  - I can access the country code via the player profile endpoint 
+ 
+
+
+Examples: 
+
+
+
+
+Functions: 
+fetchLiveStreamers()
+renderLiveStreamers()
+fetchCountryCodeForStreamers()
+renderLiveStreamersPerCountry()
+
+
+============================================================
+CODE:
+*/
+
 document.addEventListener('DOMContentLoaded', async function () {
     try {
         //await fetchPlayerTitles();
@@ -9,41 +154,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 });
 
 
-
-// select a root element to append the rest of the content 
-const chessRoot = document.getElementById('root');
-
-// create an element image for the logo 
-const logo = document.createElement('img');
-// add logo png here 
-//logo.src = 'logo.png';
-
-
-
-
-/*
-
-const userName = `garyleddy`;
-
-const url = `https://api.chess.com/pub/player/${userName}`; 
-
-const users = ['hikaru', 'garyleddy']; // array to store user names 
-
-const statsUrl = `https://api.chess.com/pub/player/${userName}/stats`;
-
-
-const userGamesUrl = `https://api.chess.com/pub/player/${userName}/games`;
-
-https://api.chess.com/pub/streamers
-search for a list of streamers that are live right now in a specified cournty 
-
-*/
-
-// add event listerners 
-
-
-// 
-
+// async function to fetch player titles 
 async function fetchPlayerTitles(title) {
         const url = `https://api.chess.com/pub/titled/${title}`;
         
