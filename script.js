@@ -11,23 +11,62 @@ const statsUrl = `https://api.chess.com/pub/player/${userName}/stats`;
 Requirements: 
 
 Inputs: 
+- checkbox: player name (vlaue is player username)
+- Dropdown menu: 
+  - Blitz
+  - Rapid
+  - Bullet 
+  - Chess Daily 
 
 
-Outputs: 
-
+Outputs:
+- game name  
+- player name
+- username 
+- title 
+- country 
+- avatar 
+- current rating 
+- best rating 
+- record: 
+  - wins 
+  - losses 
+  - draws 
 
 Clarifying questions: 
+- Do I need to create multiple functions to fetch the data of each game 
+- no because once I fetch the player stats data, I can use the name of each game as the datapoint to access the 
+  players stats about each game 
 
 Examples: 
+const url = 'https://api.chess.com/pub/player/${username}/stats'
 
+try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Error fetching Player for ${username}: ${response.status}`);
+            }
+            const data = await response.json();
+            console.log(data.chess_rapid); => display stats about rapid chess game 
+        } catch (error) {
+            
+        }
 
 
 
 Functions: 
 
-fetchPlayerUsername()
+
 fetchPlayerStats()
+- will use the ${username} endpoint in url 
+https://api.chess.com/pub/player/${username}/stats
+ALLGORITHM:
+
+
+
+
 renderPlayerStats()
+fetchPlayerCountry()
 
 
 
@@ -159,168 +198,117 @@ CODE:
 
 document.addEventListener('DOMContentLoaded', async function () {
     try {
-        //await fetchPlayerTitles();
-        //await fetchPlayerProfiles();
-      //await fetchLeaderboards();
+      
+       // adding an event listener to the player stats button 
+document.getElementById('get-player-stats').addEventListener('click', fetchStatsForSelectedPlayers);
+
+      
     } catch (error) {
         console.error('Oops, an error occured', error);
     }
 });
 
-
-// async function to fetch player titles 
-async function fetchPlayerTitles(title) {
-        const url = `https://api.chess.com/pub/titled/${title}`;
-        
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Error fetching Player for ${title}: ${response.status}`);
-            }
-            const data = await response.json();
-            console.log(data.players);
-        } catch (error) {
-            console.error(error);
-            //return null;
-        }
-}
-/*
-async function fetchLeaderboards()
-{
-    
-    const url = `https://api.chess.com/pub/leaderboards`;
-        
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Error fetching Player for ${title}: ${response.status}`);
-            }
-            const data = await response.json();
-            console.log(data.daily[0].username);
-        } catch (error) {
-            console.error(error);
-            //return null;
-        }
-
-}
-
-    const card = document.createElement('div');
-            card.setAttribute('class', 'card');
-
-            const h1 = document.createElement('h1');
-            h1.textContent = movie.title;
-
-            const p = document.createElement('p');
-            p.textContent = `${movie.description.substring(0, 300)}...`;
-
-            const director = document.createElement('p');
-            director.textContent = 'Director: ' + movie.director;
-
-            const movImg = document.createElement('img');
-            movImg.setAttribute('src', movie.image);
-            movImg.setAttribute('width', '200px');
-            movImg.setAttribute('height', '350px');
-
-            card.appendChild(h1);
-            card.appendChild(p);
-            card.appendChild(director);
-            card.appendChild(movImg);
-            container.appendChild(card);
-*/
-async function fetchLeaderboards() {
-    //const card = document.createElement('div');
-        //card.setAttribute('class', 'card');
-        const leaderboardContainer = document.getElementById('leaderboards');
-        try {
-            const response = await fetch('https://api.chess.com/pub/leaderboards');
-            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-            const data = await response.json();
-        
-            data.daily.forEach(player => {
-                const PlayerElement = document.createElement('div');
-                PlayerElement.setAttribute('class', 'leaderboard-card')
-                PlayerElement.style.border = '1px solid #ddd';
-                PlayerElement.style.padding - '5px';
-            
-                const avatar = document.createElement('img');
-                avatar.setAttribute('src', player.avatar);
-                avatar.setAttribute('width', '200px');
-                avatar.setAttribute('height', '250px');
-                const h1 = document.createElement('h1');
-                h1.textContent = `Rank: ${player.rank}`;
-
-                const h2name = document.createElement('h2');
-                h2name.textContent =   `Name: ${player.name};`
-
-                const h2 = document.createElement('h2');
-                h2.textContent =   `Username: ${player.username};`
-
-                const h2title = document.createElement('h2');
-                h2title.textContent = `Title: ${player.title}`;
-
-                const para1 = document.createElement('p');
-                para1.textContent = `Score: ${player.score}`;
-
-
-                
-                PlayerElement.appendChild(h1);
-                PlayerElement.appendChild(avatar);
-                PlayerElement.appendChild(h2name);
-                PlayerElement.appendChild(h2);
-                PlayerElement.appendChild(h2title);
-                PlayerElement.appendChild(para1);
-                
-                leaderboardContainer.appendChild(PlayerElement);
-            });
-        } catch (error) {
-            console.error('Fetch error:', error);
-            PlayerElement.textContent = 'Could not fetch users: ' + error;
-        }
-}
-
-
-// add an event listener 
-//document.getElementById('get-player-profiles').addEventListener('click', fetchPlayerProfiles)
-
-/**
- * Fetch movie data and display each movie in a card format.
- * Uses async/await for a cleaner asynchronous flow.
- */
-async function fetchPlayerProfiles() {
+// fetch player profiles 
+async function fetchPlayerProfile(username) {
+    const url = `https://api.chess.com/pub/player/${username}`;
     try {
-      //const response = await fetch(`https://api.chess.com/pub/player/garyleddy`);
-      const data = await response.json(); // Parses the response as JSON
-     console.log(data);
-      // Iterate over each movie object and create a card for it
-      //data.forEach(player => {
-        const card = document.createElement('div');
-        card.setAttribute('class', 'card');
-  
-        const h1 = document.createElement('h1');
-        h1.textContent = data.username;
-  
-        const p = document.createElement('p');
-        p.textContent = ` Membership: ${data.title}`;
-
-        const p2 = document.createElement('p');
-        p.textContent = data.status;
-  
-       const container = document.getElementById('get-player-profiles');
-  
-        container.appendChild(card);
-        card.appendChild(h1);
-        card.appendChild(p);
-        card.appendChild(p2);
-     // });
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Error fetching the profile for username: ${username}: ${response.status}`);
+        }
+        return await response.json();
     } catch (error) {
-      // Display an error message if the fetch fails
-      const errorMessage = document.createElement('div');
-      errorMessage.textContent = `Gah, it's not working! Error: ${error.message}`;
-      container.appendChild(errorMessage);
+        console.error(error);
+        return null;
     }
-  }
+}
+  
 
-// testing the API 
-//fetchPlayerTitles(`GM`);
+// fetch user stats 
+// takes user names as parameter 
+async function fetchPlayerStats(username) {
+    const url = `https://api.chess.com/pub/player/${username}/stats`;
+        
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Error fetching Player ${username}: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
 
-//fetchPlayerProfiles('garryleddy');
+function createPlayerStatsDiv(profile, playerStats, typeOfGame ) {
+    
+        const playerStatsDiv = document.createElement('div');
+        playerStatsDiv.style.border = '1px solid #ddd';
+        playerStatsDiv.style.padding = '10px';
+        playerStatsDiv.style.margin = '5px';
+ 
+        // need to add other games here
+       if (typeOfGame === 'live_bullet') {
+         playerStatsDiv.innerHTML = `
+                 <h3>Bullet Chess</h3>
+                 <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
+                 <p><strong>Player Name:</strong> ${profile.name}</p>
+                 <p><strong>Username:</strong> ${profile.username}</p>
+                 <p><strong>Title:</strong> ${profile.title}</p>
+                 <p><strong>Current Rating:</strong> ${playerStats.chess_bullet.last.rating}</p>
+                 <p><strong>Best Rating:</strong> ${playerStats.chess_bullet.best.rating}</p>
+                 <p><strong>Total Wins:</strong> ${playerStats.chess_bullet.record.win}</p>
+                 <p><strong>Total Losses:</strong> ${playerStats.chess_bullet.record.loss}</p>
+                 <p><strong>Total Draws:</strong> ${playerStats.chess_bullet.record.draw}</p>
+    
+             `;
+     return playerStatsDiv; 
+       } else {
+        playerStatsDiv.innerHTML = `<p>No data is available for this game</p>`;
+        return playerStatsDiv
+       }
+    
+}
+// async function to fetch selected players 
+async function fetchStatsForSelectedPlayers() {
+    
+    const checkboxes = document.querySelectorAll(`input[type="checkbox"]:checked`);
+    // array to store selected players
+    const selectedPlayers = [];
+
+    // getting 'player stats div by its id 
+    const playerStatsContainer = document.getElementById('player-stats');
+
+    const chessGameDropdownMenuInput = document.getElementById('live-games').value;
+   
+     
+    checkboxes.forEach(checkbox => {
+        selectedPlayers.push(checkbox.value); // push each element to the selectedPlayers array
+    });
+
+    playerStatsContainer.innerHTML = "";
+
+    // for..of loop lets us use the 'await' keyword within the loop 
+    for (const username of selectedPlayers) {
+        
+        const playerProfile = await fetchPlayerProfile(username);
+       const playerStats = await fetchPlayerStats(username);
+
+       
+        if (playerStats) {
+            
+            const playerStatsDiv = createPlayerStatsDiv(playerProfile, playerStats, chessGameDropdownMenuInput);
+            playerStatsContainer.appendChild(playerStatsDiv);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
