@@ -82,7 +82,18 @@ Clarifying questions:
 - Should I create functions to render each chess game or can I use one function and pass in game name?
  - I'll start by creating individual functions to get the code to work and I can refactor if need be 
 
-Examples: 
+ How will I fetch the country code from each user 
+ (the value is a string, which is a link, and has the country code at the end of the string)
+ - access the string (value) via the the 'country' key
+- split the string using string.SPlit('/') at every forward forward slash which will return an array of strings 
+- use the Array.pop() function to remove the last element in the string (the country code)
+- save this return value to a variable which is the country code that I can use for filtering the data   
+
+
+Examples:
+Player.country: https://api.chess.com/pub/country/US
+const countryCode = player.country.Split("/").pop()/; 
+
 
 
 
