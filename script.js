@@ -16,16 +16,16 @@ Inputs:
   - Blitz
   - Rapid
   - Bullet 
-  - Chess Daily 
+
 
 
 Outputs:
 - game name  
+- avatar 
 - player name
 - username 
 - title 
 - country 
-- avatar 
 - current rating 
 - best rating 
 - record: 
@@ -60,10 +60,6 @@ Functions:
 fetchPlayerStats()
 - will use the ${username} endpoint in url 
 https://api.chess.com/pub/player/${username}/stats
-ALLGORITHM:
-
-
-
 
 renderPlayerStats()
 fetchPlayerCountry()
@@ -248,7 +244,7 @@ function createPlayerStatsDiv(profile, playerStats, typeOfGame ) {
         playerStatsDiv.style.padding = '10px';
         playerStatsDiv.style.margin = '5px';
  
-        // need to add other games here
+        // there is a lot of similar code below. Maybe I can refactor 
        if (typeOfGame === 'live_bullet') {
          playerStatsDiv.innerHTML = `
                  <h3>Bullet Chess</h3>
@@ -264,6 +260,36 @@ function createPlayerStatsDiv(profile, playerStats, typeOfGame ) {
     
              `;
      return playerStatsDiv; 
+       } else if (typeOfGame === 'live_blitz'){
+        playerStatsDiv.innerHTML = `
+                <h3>Blitz Chess</h3>
+                <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
+                <p><strong>Player Name:</strong> ${profile.name}</p>
+                <p><strong>Username:</strong> ${profile.username}</p>
+                <p><strong>Title:</strong> ${profile.title}</p>
+                <p><strong>Current Rating:</strong> ${playerStats.chess_blitz.last.rating}</p>
+                <p><strong>Best Rating:</strong> ${playerStats.chess_blitz.best.rating}</p>
+                <p><strong>Total Wins:</strong> ${playerStats.chess_blitz.record.win}</p>
+                <p><strong>Total Losses:</strong> ${playerStats.chess_blitz.record.loss}</p>
+                <p><strong>Total Draws:</strong> ${playerStats.chess_blitz.record.draw}</p>
+
+    `;
+return playerStatsDiv; 
+       }   else if (typeOfGame === 'live_rapid'){
+        playerStatsDiv.innerHTML = `
+                <h3>Rapid Chess</h3>
+                <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
+                <p><strong>Player Name:</strong> ${profile.name}</p>
+                <p><strong>Username:</strong> ${profile.username}</p>
+                <p><strong>Title:</strong> ${profile.title}</p>
+                <p><strong>Current Rating:</strong> ${playerStats.chess_rapid.last.rating}</p>
+                <p><strong>Best Rating:</strong> ${playerStats.chess_rapid.best.rating}</p>
+                <p><strong>Total Wins:</strong> ${playerStats.chess_rapid.record.win}</p>
+                <p><strong>Total Losses:</strong> ${playerStats.chess_rapid.record.loss}</p>
+                <p><strong>Total Draws:</strong> ${playerStats.chess_rapid.record.draw}</p>
+
+    `;
+return playerStatsDiv; 
        } else {
         playerStatsDiv.innerHTML = `<p>No data is available for this game</p>`;
         return playerStatsDiv
