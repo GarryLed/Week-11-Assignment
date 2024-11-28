@@ -56,13 +56,17 @@ try {
 
 Functions: 
 
+fetchPlayerProfile()
 
 fetchPlayerStats()
 - will use the ${username} endpoint in url 
 https://api.chess.com/pub/player/${username}/stats
 
-renderPlayerStats()
-fetchPlayerCountry()
+createPlayerStatsDiv()
+
+
+fetchSelectedPlayerStats()
+
 
 
 
@@ -80,9 +84,25 @@ const users = ['hikaru', 'garyleddy']; // array to store user names
 Requirements: 
 
 Inputs: 
+- checkbox: Player titles 
+- Dropdown menu: 
+  - All countries 
+  - United States 
+  - United Kingdom 
+  - Ireland 
+  - Norway 
 
 
-Outputs: 
+
+Outputs:  
+- avatar 
+- player name
+- username 
+- title 
+- country 
+- is streamer 
+  - if true then display platformd 
+ - if false then display "not a streamer" message 
 
 
 Clarifying questions: 
@@ -94,9 +114,14 @@ Examples:
 
 Functions: 
 
-fetchPlayerTitles()
-fetchPlayerUsername()
+fetchTitledPlayerUsernames()
+
+
 renderPlayerProfiles()
+
+fetchPlayerCountry()
+
+fetchSelectedTitledPlayers()
 
 
 
@@ -331,8 +356,46 @@ async function fetchStatsForSelectedPlayers() {
 }
 
 
+// fetch titled player usernames 
+async function fetchTitledPlayerUsernames(title) {
+    const url = `https://api.chess.com/pub/titled/${title}`;
+        
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Error fetching Title: ${title}: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
 
 
+async function fetchUserNamesForSelectedTitles() {
+
+    // get data from checkboxes
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+
+    // array to store titles 
+    const selectedTitles = [];
+
+    // Titled player container 
+    const  titledPlayersContainer = document.getElementById('titled-player-profiles');
+
+    const titledPlayerCountries = document.getAnimations('titled-player-countries').value;
+
+    checkboxes.forEach(checkbox => {
+        selectedTitles.push(checkbox.value);
+    })
+
+    titledPlayersContainer.innerHTML = "";
+
+    for (const title of selectedTitles) {
+        // add await functions here 
+    }
+}
 
 
 
