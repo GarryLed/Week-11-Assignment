@@ -91,6 +91,9 @@ Clarifying questions:
 
 
 Examples:
+https://www.w3schools.com/jsref/jsref_split.asp
+https://www.w3schools.com/jsref/jsref_pop.asp
+
 Player.country: https://api.chess.com/pub/country/US
 const countryCode = player.country.Split("/").pop()/; 
 
