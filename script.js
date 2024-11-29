@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     try {
       
        // adding an event listener to the player stats button 
-       extractPlayerCountryCode();
+       //extractPlayerCountryCode(); // for testing purposes only (remove later)
 //document.getElementById('get-player-stats').addEventListener('click', fetchStatsForSelectedPlayers);
 
       
@@ -405,12 +405,22 @@ async function fetchUserNamesForSelectedTitles() {
 
 // extract country code from string url function 
 
-function extractPlayerCountryCode() {
-    const country = "testing/IE" // for testing 
-    const countryCode = country.split("/").pop();
-    console.log(countryCode); // testing funciton 
+function extractPlayerCountryCode(country) { 
+    return country.split("/").pop();  
 }
 
 //------------------------ End of Player Titles Functions -------------------------------
+
+
+
+//------------------------ Helper Functions for testing code ------------------------------------
+
+// extract country code from string url function 
+
+function extractPlayerCountryCode(country) { 
+    return country.split("/").pop();  
+}
+
+//------------------------ End of Helper Functions ------------------------------------
 
 
