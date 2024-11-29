@@ -123,6 +123,10 @@ fetchPlayerCountry()
 
 fetchSelectedTitledPlayers()
 
+extractPlayerCountryCode(country)
+- takes a string (url) as a parameter
+- returns a string (country code)
+
 
 
 ====================================
@@ -221,7 +225,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     try {
       
        // adding an event listener to the player stats button 
-document.getElementById('get-player-stats').addEventListener('click', fetchStatsForSelectedPlayers);
+       extractPlayerCountryCode();
+//document.getElementById('get-player-stats').addEventListener('click', fetchStatsForSelectedPlayers);
 
       
     } catch (error) {
@@ -372,6 +377,7 @@ async function fetchTitledPlayerUsernames(title) {
     }
 }
 
+//---------------------Player Titles Functinos ---------------------------------
 
 async function fetchUserNamesForSelectedTitles() {
 
@@ -397,7 +403,14 @@ async function fetchUserNamesForSelectedTitles() {
     }
 }
 
+// extract country code from string url function 
 
+function extractPlayerCountryCode() {
+    const country = "testing/IE" // for testing 
+    const countryCode = country.split("/").pop();
+    console.log(countryCode); // testing funciton 
+}
 
+//------------------------ End of Player Titles Functions -------------------------------
 
 
