@@ -115,17 +115,31 @@ Examples:
 Functions: 
 
 fetchTitledPlayerUsernames()
-
-
 renderPlayerProfiles()
-
 fetchPlayerCountry()
-
 fetchSelectedTitledPlayers()
 
-extractPlayerCountryCode(country)
-- takes a string (url) as a parameter
-- returns a string (country code)
+ALGORITHM (steps)
+- gather checkbox data
+  - store values in an array  
+- gather country data 
+
+- fetch the titled players JSON data (array of player usernames)
+- function will take title as a parameter 
+- will return an array of usernames (associated with a specified title)
+
+loop through titledUsername array 
+-fetch profile for each user 
+  - display: 
+    - player name 
+    - username 
+    - title 
+    - avatar 
+    - is streamer 
+
+
+
+
 
 
 
@@ -225,9 +239,14 @@ document.addEventListener('DOMContentLoaded', async function () {
     try {
       
        // adding an event listener to the player stats button 
-       //extractPlayerCountryCode(); // for testing purposes only (remove later)
 //document.getElementById('get-player-stats').addEventListener('click', fetchStatsForSelectedPlayers);
 
+       // adding an event listener to the player stats button 
+//document.getElementById('get-titled-player-profiles').addEventListener('click', fetchPlayerProfilesForSelectedTitles);
+
+document.getElementById('get-leaderboard-results').addEventListener('click', fetchLeaderboards);
+
+document.getElementById('get-live-streamers').addEventListener('click', fetchStreamers);
       
     } catch (error) {
         console.error('Oops, an error occured', error);
@@ -349,7 +368,7 @@ async function fetchStatsForSelectedPlayers() {
     for (const username of selectedPlayers) {
         
         const playerProfile = await fetchPlayerProfile(username);
-       const playerStats = await fetchPlayerStats(username);
+        const playerStats = await fetchPlayerStats(username);
 
        
         if (playerStats) {
@@ -360,6 +379,7 @@ async function fetchStatsForSelectedPlayers() {
     }
 }
 
+//---------------------Player Titles Functinos ---------------------------------
 
 // fetch titled player usernames 
 async function fetchTitledPlayerUsernames(title) {
@@ -368,7 +388,7 @@ async function fetchTitledPlayerUsernames(title) {
     try {
         const response = await fetch(url);
         if (!response.ok) {
-            throw new Error(`Error fetching Title: ${title}: ${response.status}`);
+            throw new Error(`EHTTP Error! Status: ${response.status}`);
         }
         return await response.json();
     } catch (error) {
@@ -377,20 +397,36 @@ async function fetchTitledPlayerUsernames(title) {
     }
 }
 
-//---------------------Player Titles Functinos ---------------------------------
+// fetch country code for player 
+async function fetchCountryCodeForPlayer(username) {
 
-async function fetchUserNamesForSelectedTitles() {
+    const url = `https://api.chess.com/pub/player/${username}`;
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status:: ${response.status}`);
+        }
+        const data =  await response.json();
+        const countryUrl = data.country; // returna a string (url) 
+        const countryCode = extractPlayerCountryCode(countryUrl); // extract the country code form string
+        return countryCode; // return country code 
+    } catch (error) {
+        console.error(`Error trying to fectc country code for ${username}`,error);
+        return null;
+    }
+}
+
+// fetch user
+async function fetchPlayerProfilesForSelectedTitles() {
 
     // get data from checkboxes
     const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-
-    // array to store titles 
-    const selectedTitles = [];
-
     // Titled player container 
     const  titledPlayersContainer = document.getElementById('titled-player-profiles');
-
-    const titledPlayerCountries = document.getAnimations('titled-player-countries').value;
+    // selected country 
+    const titledPlayerSelectedCountries = document.getElementById('titled-player-selected-countries').value;
+    // array to store titles 
+    const selectedTitles = [];
 
     checkboxes.forEach(checkbox => {
         selectedTitles.push(checkbox.value);
@@ -399,17 +435,150 @@ async function fetchUserNamesForSelectedTitles() {
     titledPlayersContainer.innerHTML = "";
 
     for (const title of selectedTitles) {
-        // add await functions here 
+        const titledPlayerUsernamesResponse = await fetchTitledPlayerUsernames(title) // => array of usernames for each title
+
+        // array of titled player usernames 
+        const titledPlayerUsernames = titledPlayerUsernamesResponse.players; // access the players array 
+        // loop through array of titled usernames 
+        for (const username of titledPlayerUsernames) {
+            // at each iteration fetch the player profile 
+            const titledPlayerProfile = await fetchPlayerProfile(username);
+
+            const titledPlayerProfileDiv = createTitlePlayerDiv(titledPlayerProfile);
+            titledPlayersContainer.appendChild(titledPlayerProfileDiv);
+        
+    }
     }
 }
 
-// extract country code from string url function 
+function createTitlePlayerDiv(profile) {
+    const titledPlayerProfileDiv = document.createElement('div');
+    titledPlayerProfileDiv.style.border = '1px solid #ddd';
+    titledPlayerProfileDiv.style.padding = '10px';
+    titledPlayerProfileDiv.style.margin = '5px';
 
-function extractPlayerCountryCode(country) { 
-    return country.split("/").pop();  
+   
+     titledPlayerProfileDiv.innerHTML = `
+             <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
+             <p><strong>Player Name:</strong> ${profile.name}</p>
+             <p><strong>Username:</strong> ${profile.username}</p>
+             <p><strong>Title:</strong> ${profile.title}</p>
+             
+
+         `;
+         return titledPlayerProfileDiv;
 }
 
-//------------------------ End of Player Titles Functions -------------------------------
+
+//------------------------ Leaderboard Functions  -------------------------------
+
+async function fetchLeaderboards() {
+    //const card = document.createElement('div');
+        //card.setAttribute('class', 'card');
+        const leaderboardContainer = document.getElementById('leaderboards');
+        try {
+            const response = await fetch('https://api.chess.com/pub/leaderboards');
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            const data = await response.json();
+        
+            // data for daily chess leaderboards 
+            data.daily.forEach(player => {
+                const PlayerElement = document.createElement('div');
+                PlayerElement.setAttribute('class', 'leaderboard-card')
+                PlayerElement.style.border = '1px solid #ddd';
+                PlayerElement.style.padding - '5px';
+            
+                const avatar = document.createElement('img');
+                avatar.setAttribute('src', player.avatar);
+                avatar.setAttribute('width', '200px');
+                avatar.setAttribute('height', '250px');
+                const h1 = document.createElement('h1');
+                h1.textContent = `Rank: ${player.rank}`;
+                const h2name = document.createElement('h2');
+                h2name.textContent =   `Name: ${player.name};`
+                const h2 = document.createElement('h2');
+                h2.textContent =   `Username: ${player.username};`
+                const h2title = document.createElement('h2');
+                h2title.textContent = `Title: ${player.title}`;
+                const para1 = document.createElement('p');
+                para1.textContent = `Score: ${player.score}`;
+                
+                PlayerElement.appendChild(h1);
+                PlayerElement.appendChild(avatar);
+                PlayerElement.appendChild(h2name);
+                PlayerElement.appendChild(h2);
+                PlayerElement.appendChild(h2title);
+                PlayerElement.appendChild(para1);
+                
+                leaderboardContainer.appendChild(PlayerElement);
+            });
+        } catch (error) {
+            console.error('Fetch error:', error);
+            PlayerElement.textContent = 'Could not fetch users: ' + error;
+        }
+}
+
+
+
+async function fetchFilteredLeaderboards() {
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------------- Live Streamers Functinos ------------------------------
+
+async function fetchStreamers() {
+    const url = `https://api.chess.com/pub/streamers`;
+        const streamerContainer = document.getElementById('streamer-container');
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`EHTTP Error! Status: ${response.status}`);
+        }
+        const data=  await response.json();
+        console.log(data.streamers);
+        data.streamers.forEach(player => {
+            const PlayerElement = document.createElement('div');
+            PlayerElement.setAttribute('class', 'leaderboard-card')
+            PlayerElement.style.border = '1px solid #ddd';
+            PlayerElement.style.padding - '5px';
+        
+            const avatar = document.createElement('img');
+            avatar.setAttribute('src', player.avatar);
+            avatar.setAttribute('width', '200px');
+            avatar.setAttribute('height', '250px');
+            
+            const username = document.createElement('h2');
+            username.textContent =   `Username: ${player.username};`
+           
+            
+           
+            PlayerElement.appendChild(avatar);
+            PlayerElement.appendChild(username);
+           
+            
+            streamerContainer.appendChild(PlayerElement);
+        })} catch (error) {
+        console.error(error);
+        return null;
+        }
+}
+
+
+
+
+
+
 
 
 
