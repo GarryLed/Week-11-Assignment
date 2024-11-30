@@ -150,6 +150,7 @@ Endpoints:
 
 Requirements: 
 
+
 Inputs: 
 
 
@@ -239,10 +240,10 @@ document.addEventListener('DOMContentLoaded', async function () {
     try {
       
        // adding an event listener to the player stats button 
-//document.getElementById('get-player-stats').addEventListener('click', fetchStatsForSelectedPlayers);
+document.getElementById('get-player-stats').addEventListener('click', fetchStatsForSelectedPlayers);
 
        // adding an event listener to the player stats button 
-//document.getElementById('get-titled-player-profiles').addEventListener('click', fetchPlayerProfilesForSelectedTitles);
+document.getElementById('get-titled-player-profiles').addEventListener('click', fetchPlayerProfilesForSelectedTitles);
 
 document.getElementById('get-leaderboard-results').addEventListener('click', fetchLeaderboards);
 
@@ -269,8 +270,8 @@ async function fetchPlayerProfile(username) {
 }
   
 
-// fetch user stats 
-// takes user names as parameter 
+// fetch player stats 
+// takes usernames as parameter 
 async function fetchPlayerStats(username) {
     const url = `https://api.chess.com/pub/player/${username}/stats`;
         
@@ -286,6 +287,7 @@ async function fetchPlayerStats(username) {
     }
 }
 
+// dynamically create a player stats div and populate the inner HTML 
 function createPlayerStatsDiv(profile, playerStats, typeOfGame ) {
     
         const playerStatsDiv = document.createElement('div');
@@ -345,7 +347,7 @@ return playerStatsDiv;
        }
     
 }
-// async function to fetch selected players 
+// async function to fetch stats for selected players 
 async function fetchStatsForSelectedPlayers() {
     
     const checkboxes = document.querySelectorAll(`input[type="checkbox"]:checked`);
@@ -397,26 +399,24 @@ async function fetchTitledPlayerUsernames(title) {
     }
 }
 
-// fetch country code for player 
-async function fetchCountryCodeForPlayer(username) {
-
-    const url = `https://api.chess.com/pub/player/${username}`;
+async function fetchPlayerCountry(countryCode) {
+    const url = `https://api.chess.com/pub/country/${countryCode}`;
+        
     try {
         const response = await fetch(url);
         if (!response.ok) {
-            throw new Error(`HTTP error! Status:: ${response.status}`);
+            throw new Error(`EHTTP Error! Status: ${response.status}`);
         }
-        const data =  await response.json();
-        const countryUrl = data.country; // returna a string (url) 
-        const countryCode = extractPlayerCountryCode(countryUrl); // extract the country code form string
-        return countryCode; // return country code 
+        const country =  await response.json();
+        return country.name; // returns the name of the country 
     } catch (error) {
-        console.error(`Error trying to fectc country code for ${username}`,error);
+        console.error(error);
         return null;
     }
 }
 
-// fetch user
+
+// fetch player profiles from selected titles 
 async function fetchPlayerProfilesForSelectedTitles() {
 
     // get data from checkboxes
@@ -424,7 +424,7 @@ async function fetchPlayerProfilesForSelectedTitles() {
     // Titled player container 
     const  titledPlayersContainer = document.getElementById('titled-player-profiles');
     // selected country 
-    const titledPlayerSelectedCountries = document.getElementById('titled-player-selected-countries').value;
+    const titledPlayerSelectedCounty = document.getElementById('titled-player-selected-countries').value;
     // array to store titles 
     const selectedTitles = [];
 
@@ -444,29 +444,51 @@ async function fetchPlayerProfilesForSelectedTitles() {
             // at each iteration fetch the player profile 
             const titledPlayerProfile = await fetchPlayerProfile(username);
 
-            const titledPlayerProfileDiv = createTitlePlayerDiv(titledPlayerProfile);
+        
+
+            // Extracting the country code: 
+            const countryUrl = titledPlayerProfile.country; // returns a string (country url) 
+            const countryCode = extractPlayerCountryCode(countryUrl); // extract the country code form url
+
+            const playerCountry = await fetchPlayerCountry(countryCode);
+
+            // filtering the country data by using 'continue' if the expression returns false 
+            if (titledPlayerSelectedCounty !== 'all' && countryCode !== titledPlayerSelectedCounty) continue; 
+
+            const titledPlayerProfileDiv = createTitlePlayerDiv(titledPlayerProfile, playerCountry, );
             titledPlayersContainer.appendChild(titledPlayerProfileDiv);
         
     }
     }
 }
 
-function createTitlePlayerDiv(profile) {
+function createTitlePlayerDiv(profile, country) {
     const titledPlayerProfileDiv = document.createElement('div');
     titledPlayerProfileDiv.style.border = '1px solid #ddd';
     titledPlayerProfileDiv.style.padding = '10px';
     titledPlayerProfileDiv.style.margin = '5px';
 
+    // check if player is a streamer 
+    // if so, then a link to the players streaming channel will be displayed 
+    const isStreamer = profile.is_streamer; // returns true or false
+    let streamerMessage;
+    if (isStreamer) {
+         streamerMessage = `<p><strong>Streaming Platform:</strong> <a href="${profile.twitch_url}" target="_blank">Twitch</a></p>`;
+    } else {
+         streamerMessage = `<p>Not a Streamer</p>`;
+    }
    
-     titledPlayerProfileDiv.innerHTML = `
+        titledPlayerProfileDiv.innerHTML = `
              <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
              <p><strong>Player Name:</strong> ${profile.name}</p>
              <p><strong>Username:</strong> ${profile.username}</p>
              <p><strong>Title:</strong> ${profile.title}</p>
-             
-
+             <p><strong>Country:</strong> ${country}</p>
+             ${streamerMessage}
          `;
          return titledPlayerProfileDiv;
+
+  
 }
 
 
@@ -480,6 +502,16 @@ async function fetchLeaderboards() {
             const response = await fetch('https://api.chess.com/pub/leaderboards');
             if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
             const data = await response.json();
+
+             // Extracting the country code: 
+             const countryUrl = data.daily.country; // returns a string (country url) 
+             console.log(data.daily);
+             const countryCode = extractPlayerCountryCode(countryUrl); // extract the country code form url
+ 
+             const playerCountry = await fetchPlayerCountry(countryCode);
+
+             // extraction need to be done inside loop but forEact will not let me use await
+             // so I will use the for loop
         
             // data for daily chess leaderboards 
             data.daily.forEach(player => {
@@ -490,18 +522,20 @@ async function fetchLeaderboards() {
             
                 const avatar = document.createElement('img');
                 avatar.setAttribute('src', player.avatar);
-                avatar.setAttribute('width', '200px');
-                avatar.setAttribute('height', '250px');
-                const h1 = document.createElement('h1');
+                avatar.setAttribute('width', '100px');
+                avatar.setAttribute('height', '100px');
+                const h1 = document.createElement('h2');
                 h1.textContent = `Rank: ${player.rank}`;
-                const h2name = document.createElement('h2');
+                const h2name = document.createElement('h3');
                 h2name.textContent =   `Name: ${player.name};`
-                const h2 = document.createElement('h2');
+                const h2 = document.createElement('h3');
                 h2.textContent =   `Username: ${player.username};`
-                const h2title = document.createElement('h2');
+                const h2title = document.createElement('h3');
                 h2title.textContent = `Title: ${player.title}`;
                 const para1 = document.createElement('p');
-                para1.textContent = `Score: ${player.score}`;
+                para1.textContent = `Score: ${player.score}`; 
+                const para4 = document.createAttribute('p');
+                para4.textContent = `<strong>Country:</strong> ${playerCountry}`;
                 
                 PlayerElement.appendChild(h1);
                 PlayerElement.appendChild(avatar);
@@ -509,6 +543,7 @@ async function fetchLeaderboards() {
                 PlayerElement.appendChild(h2);
                 PlayerElement.appendChild(h2title);
                 PlayerElement.appendChild(para1);
+                PlayerElement.appendChild(para4);
                 
                 leaderboardContainer.appendChild(PlayerElement);
             });
@@ -555,10 +590,10 @@ async function fetchStreamers() {
         
             const avatar = document.createElement('img');
             avatar.setAttribute('src', player.avatar);
-            avatar.setAttribute('width', '200px');
-            avatar.setAttribute('height', '250px');
+            avatar.setAttribute('width', '100px');
+            avatar.setAttribute('height', '100px');
             
-            const username = document.createElement('h2');
+            const username = document.createElement('h3');
             username.textContent =   `Username: ${player.username};`
            
             
@@ -574,6 +609,8 @@ async function fetchStreamers() {
         }
 }
 
+// fiilter streamers by titles and countries 
+
 
 
 
@@ -586,8 +623,8 @@ async function fetchStreamers() {
 
 // extract country code from string url function 
 
-function extractPlayerCountryCode(country) { 
-    return country.split("/").pop();  
+function extractPlayerCountryCode(countryUrl) { 
+    return countryUrl.split("/").pop();  
 }
 
 //------------------------ End of Helper Functions ------------------------------------

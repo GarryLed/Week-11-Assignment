@@ -19,8 +19,8 @@
       <label><input type="checkbox" value="hikaru" id="player-hikaru" />Hikaru Nakamura</label><br />
       <label><input type="checkbox" value="nikotheodorou" id="player-nikolas" />Nikolas Theodorou</label><br />
       <label><input type="checkbox" value="arkadiykhromaev" id="player-arkadiy" />Arkadiy Khromaev</label><br />
-    <h3>Select Game</h3>
-    <label for="chess-games">Choose a game:</label>
+
+    <label for="filter-games"><strong>Games:</strong></label>
     <select id="live-games" name="chess-games">
       <option value="live_blitz">Blitz</option>
       <option value="live_bullet">Bullet</option>
@@ -41,14 +41,14 @@
       <label><input type="checkbox" value="WIM" id="womens-international-master" /> Womens International Masters</label><br />
   </div>
   <div>
-    <h3>Choose a Country:</h3>
-    
+    <label for="countries"><strong>Countries:</strong></label>
 <select id="titled-player-selected-countries" name="countries">
   <option value="all">All Countries</option>
   <option value="US">United States</option>
-  <option value="UK">United Kingdom</option>
-  <option value="IT">Italy</option>
-  <option value="IE">Ireland</option>
+  <option value="RU">Russia</option>
+  <option value="PT">India</option>
+  <option value="UA">Ukraine</option>
+
 </select>
 </div>
  
@@ -56,9 +56,10 @@
     <div id="titled-player-profiles"></div>
   </section>
   <!-------------------End of Player titles section-------------------------->
- 
+ <section id="leaderboards-section">
   <div class="leaderboard">
     <h2>Leaderboards</h2>
+    <label for=""><strong>Games:</strong></label>
     <select id="games-filter">
       <option value="live_blitz">Blitz</option>
       <option value="live_bullet">Bullet</option>
@@ -66,19 +67,14 @@
       <option value="daily">Daily Chess</option>
     </select>
 
-    <select id="title-filter">
-      <option value="all">All Titles</option>
-      <option value="GM">Grandmaster</option>
-      <option value="IM">International Master</option>
-      <option value="FM">FIDE Master</option>
-      <option value="NM">National Master</option>
-    </select>
-
+    <label for="countries"><strong>Countries:</strong></label>
     <select id="country-filter">
       <option value="all">All Countries</option>
+      <option value="all">All Countries</option>
       <option value="US">United States</option>
-      <option value="UK">United Kingdom</option>
-      <option value="IE">Ireland</option>
+      <option value="RU">Russia</option>
+      <option value="IN">India</option>
+      <option value="UA">Ukraine</option>
       <option value="NO">Norway</option>
     </select>
 
@@ -87,10 +83,19 @@
   <button id="get-leaderboard-results">Get Leaderboard Results</button>
 
   <div id="leaderboards"></div>
-
+</section>  
+<section id="streamers-section">
   <div>
     <h2>Watch Live Chess Streamers</h2>
-    <label for="countries">Choose a country:</label>
+    <label for="streamer-title"><strong>Chess Titles:</strong></label>
+    <select id="title-filter">
+      <option value="all">All Titles</option>
+      <option value="GM">Grandmaster</option>
+      <option value="IM">International Master</option>
+      <option value="FM">FIDE Master</option>
+      <option value="NM">National Master</option>
+    </select>
+    <label for="countries"><strong>Countries:</strong></label>
 <select id="live-streamers-countries" name="countries">
   <option value="all">All Countries</option>
   <option value="US">United States</option>
@@ -101,6 +106,7 @@
 </div>
 <button id="get-live-streamers">Get Live Streamers</button>
 <div id="streamer-container"></div>
+</section>
       <script src="script.js"></script>
   </body>
 </html>
