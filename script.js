@@ -245,7 +245,7 @@ document.getElementById('get-player-stats').addEventListener('click', fetchStats
        // adding an event listener to the player stats button 
 document.getElementById('get-titled-player-profiles').addEventListener('click', fetchPlayerProfilesForSelectedTitles);
 
-document.getElementById('get-leaderboard-results').addEventListener('click', fetchLeaderboards);
+document.getElementById('get-leaderboard-results').addEventListener('click', fetchFilteredLeaderboards);
 
 document.getElementById('get-live-streamers').addEventListener('click', fetchStreamers);
       
@@ -495,69 +495,128 @@ function createTitlePlayerDiv(profile, country) {
 //------------------------ Leaderboard Functions  -------------------------------
 
 async function fetchLeaderboards() {
-    //const card = document.createElement('div');
-        //card.setAttribute('class', 'card');
-        const leaderboardContainer = document.getElementById('leaderboards');
-        try {
-            const response = await fetch('https://api.chess.com/pub/leaderboards');
-            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-            const data = await response.json();
-
-             // Extracting the country code: 
-             const countryUrl = data.daily.country; // returns a string (country url) 
-             console.log(data.daily);
-             const countryCode = extractPlayerCountryCode(countryUrl); // extract the country code form url
- 
-             const playerCountry = await fetchPlayerCountry(countryCode);
-
-             // extraction need to be done inside loop but forEact will not let me use await
-             // so I will use the for loop
-        
-            // data for daily chess leaderboards 
-            data.daily.forEach(player => {
-                const PlayerElement = document.createElement('div');
-                PlayerElement.setAttribute('class', 'leaderboard-card')
-                PlayerElement.style.border = '1px solid #ddd';
-                PlayerElement.style.padding - '5px';
-            
-                const avatar = document.createElement('img');
-                avatar.setAttribute('src', player.avatar);
-                avatar.setAttribute('width', '100px');
-                avatar.setAttribute('height', '100px');
-                const h1 = document.createElement('h2');
-                h1.textContent = `Rank: ${player.rank}`;
-                const h2name = document.createElement('h3');
-                h2name.textContent =   `Name: ${player.name};`
-                const h2 = document.createElement('h3');
-                h2.textContent =   `Username: ${player.username};`
-                const h2title = document.createElement('h3');
-                h2title.textContent = `Title: ${player.title}`;
-                const para1 = document.createElement('p');
-                para1.textContent = `Score: ${player.score}`; 
-                const para4 = document.createAttribute('p');
-                para4.textContent = `<strong>Country:</strong> ${playerCountry}`;
-                
-                PlayerElement.appendChild(h1);
-                PlayerElement.appendChild(avatar);
-                PlayerElement.appendChild(h2name);
-                PlayerElement.appendChild(h2);
-                PlayerElement.appendChild(h2title);
-                PlayerElement.appendChild(para1);
-                PlayerElement.appendChild(para4);
-                
-                leaderboardContainer.appendChild(PlayerElement);
-            });
-        } catch (error) {
-            console.error('Fetch error:', error);
-            PlayerElement.textContent = 'Could not fetch users: ' + error;
+    
+    try {
+        const response = await fetch('https://api.chess.com/pub/leaderboards');
+        if (!response.ok) {
+            throw new Error(`EHTTP Error! Status: ${response.status}`);
         }
+        return await response.json();
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+    
 }
 
 
+function createLeaderboardDiv(profile, country, playerStats, typeOfGame) {
+
+    const leaderboardDiv = document.createElement('div');
+        leaderboardDiv.style.border = '1px solid #ddd';
+        leaderboardDiv.style.padding = '10px';
+        leaderboardDiv.style.margin = '5px';
+     // there is a lot of similar code below. Maybe I can refactor 
+     if (typeOfGame === 'live_bullet') {
+        leaderboardDiv.innerHTML = `
+                <h3>Bullet Chess</h3>
+                <p><strong>Rank:</strong> ${profile.rank}</p>
+               <p><strong>Score:</strong> ${profile.score}</p>
+                <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
+                <p><strong>Player Name:</strong> ${profile.name}</p>
+                <p><strong>Username:</strong> ${profile.username}</p>
+                <p><strong>Title:</strong> ${profile.title}</p>
+                <p><strong>Current Rating:</strong> ${playerStats.chess_bullet.last.rating}</p>
+                <p><strong>Best Rating:</strong> ${playerStats.chess_bullet.best.rating}</p>
+                <p><strong>Total Wins:</strong> ${playerStats.chess_bullet.record.win}</p>
+                <p><strong>Total Losses:</strong> ${playerStats.chess_bullet.record.loss}</p>
+                <p><strong>Total Draws:</strong> ${playerStats.chess_bullet.record.draw}</p>
+   
+            `;
+    return leaderboardDiv; 
+      } else if (typeOfGame === 'live_blitz'){
+       leaderboardDiv.innerHTML = `
+               <h3>Blitz Chess</h3>
+               <p><strong>Rank:</strong> ${profile.rank}</p>
+               <p><strong>Score:</strong> ${profile.score}</p>
+               <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
+               <p><strong>Player Name:</strong> ${profile.name}</p>
+               <p><strong>Username:</strong> ${profile.username}</p>
+               <p><strong>Title:</strong> ${profile.title}</p>
+
+               <p><strong>Current Rating:</strong> ${playerStats.chess_blitz.last.rating}</p>
+               <p><strong>Best Rating:</strong> ${playerStats.chess_blitz.best.rating}</p>
+               <p><strong>Total Wins:</strong> ${playerStats.chess_blitz.record.win}</p>
+               <p><strong>Total Losses:</strong> ${playerStats.chess_blitz.record.loss}</p>
+               <p><strong>Total Draws:</strong> ${playerStats.chess_blitz.record.draw}</p>
+
+   `;
+return leaderboardDiv; 
+      }   else if (typeOfGame === 'live_rapid'){
+       leaderboardDiv.innerHTML = `
+               <h3>Rapid Chess</h3>
+               <p><strong>Rank:</strong> ${profile.rank}</p>
+               <p><strong>Score:</strong> ${profile.score}</p>
+               <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
+               <p><strong>Player Name:</strong> ${profile.name}</p>
+               <p><strong>Username:</strong> ${profile.username}</p>
+               <p><strong>Title:</strong> ${profile.title}</p>
+               <p><strong>Current Rating:</strong> ${playerStats.chess_rapid.last.rating}</p>
+               <p><strong>Best Rating:</strong> ${playerStats.chess_rapid.best.rating}</p>
+               <p><strong>Total Wins:</strong> ${playerStats.chess_rapid.record.win}</p>
+               <p><strong>Total Losses:</strong> ${playerStats.chess_rapid.record.loss}</p>
+               <p><strong>Total Draws:</strong> ${playerStats.chess_rapid.record.draw}</p>
+
+   `;
+return leaderboardDiv; 
+      } else {
+       leaderboardDiv.innerHTML = `<p>No data is available for this game</p>`;
+       return leaderboardDiv
+      }  
+}
 
 async function fetchFilteredLeaderboards() {
+    // create a leaderboard div container 
+    const  leaderboardContainer = document.getElementById('leaderboards');
+    // get leaderboard games form dropdown menu 
+    const leaderboardSelectedGame = document.getElementById('leaderboard-games-filter').value;
 
+    // get leaderboard countries from dropdown menu 
+    const leaderboardSelectedCountries = document.getElementById('leaderboard-country-filter').value;
+
+    leaderboardContainer.innerHTML = ''; 
+
+    // fetch the leaderboard data 
+    const leaderboardData = await fetchLeaderboards();
+
+   const games = leaderboardData[leaderboardSelectedGame]; // need to review this 
+
+   console.log(leaderboardSelectedGame);
+   console.log(leaderboardData);
+   console.log(games);
+
+   for (const player of games) {
+    const playerProfile = await fetchPlayerProfile(player.username);
+    console.log(playerProfile);
+
+    
+    // Extracting the country code: 
+    const countryUrl = playerProfile.country; // returns a string (country url) 
+    const countryCode = extractPlayerCountryCode(countryUrl); // extract the country code form url
+
+    // fetch the country name 
+    const playerCountry = await fetchPlayerCountry(countryCode);
+
+    // fetch the stats 
+    const playerStats = await fetchPlayerStats(player.username);
+    
+
+    // create div and append
+    const leaderboardDiv = createLeaderboardDiv(playerProfile, playerCountry, playerStats, leaderboardSelectedGame);
+    leaderboardContainer.appendChild(leaderboardDiv);
+   }
 }
+
 
 
 

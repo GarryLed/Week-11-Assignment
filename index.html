@@ -45,9 +45,10 @@
 <select id="titled-player-selected-countries" name="countries">
   <option value="all">All Countries</option>
   <option value="US">United States</option>
+  <option value="RC">China</option>
   <option value="RU">Russia</option>
-  <option value="PT">India</option>
   <option value="UA">Ukraine</option>
+  <option value="NO">Norway</option>
 
 </select>
 </div>
@@ -60,7 +61,7 @@
   <div class="leaderboard">
     <h2>Leaderboards</h2>
     <label for=""><strong>Games:</strong></label>
-    <select id="games-filter">
+    <select id="leaderboard-games-filter">
       <option value="live_blitz">Blitz</option>
       <option value="live_bullet">Bullet</option>
       <option value="live_rapid">Rapid</option>
@@ -68,12 +69,11 @@
     </select>
 
     <label for="countries"><strong>Countries:</strong></label>
-    <select id="country-filter">
-      <option value="all">All Countries</option>
+    <select id="leaderboard-country-filter">
       <option value="all">All Countries</option>
       <option value="US">United States</option>
+      <option value="RC">China</option>
       <option value="RU">Russia</option>
-      <option value="IN">India</option>
       <option value="UA">Ukraine</option>
       <option value="NO">Norway</option>
     </select>
@@ -84,6 +84,8 @@
 
   <div id="leaderboards"></div>
 </section>  
+
+<!---------------------Streamers section --------------------------->
 <section id="streamers-section">
   <div>
     <h2>Watch Live Chess Streamers</h2>
