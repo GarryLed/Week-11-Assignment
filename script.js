@@ -298,6 +298,7 @@ document.getElementById('get-live-streamers').addEventListener('click', fetchSel
 
 // fetch player profiles 
 async function fetchPlayerProfile(username) {
+    // player 
     const url = `https://api.chess.com/pub/player/${username}`;
     try {
         const response = await fetch(url);
@@ -785,39 +786,54 @@ async function fetchStreamers() {
 async function fetchSelectedLiveStreamers() {
      // create a streamer div container 
      const  liveStreamerContainer = document.getElementById('streamer-container');
-     // get leaderboard games form dropdown menu 
-     const streamerTitle = document.getElementById('streamer-title-filter').value;
+    
  
      // get leaderboard countries from dropdown menu 
      const streamerSelectedCountries = document.getElementById('streamer-country-filter').value;
  
+
      liveStreamerContainer.innerHTML = ''; 
 
      const streamerResponse = await fetchStreamers();
+     console.log(streamerResponse);
 
      const streamers = streamerResponse.streamers;
 
-     console.log(streamers);
+    // console.log(streamers);
 
+     let liveStream =``;
+     let streamerCountry = ``;
 
      for (const streamer of streamers) {
 
-        console.log(streamer);
-        // fetch streamer profile 
-        const streamerProfile = await fetchPlayerProfile(streamer.username)
+        // returns a boolean true if streamer is live 
+         const isLive = streamer.is_live;
 
-        // fetch streamer country 
-        // Extracting the country code: 
-    const countryUrl = streamerProfile.country; // returns a string (country url) 
-    const countryCode = extractPlayerCountryCode(countryUrl); // extract the country code form url
+         if (!isLive) continue; // if a streamer is not live then skip to next iteration 
 
-    // fetch the country name 
-    const streamerCountry = await fetchPlayerCountry(countryCode);
+         // get streamer platforms (an array)
+         const streamerPlatforms = streamer.platforms;
 
-    // filtering the country data by using 'continue' if the expression returns false 
-    if (streamerSelectedCountries !== 'all' && countryCode !== streamerSelectedCountries) continue; 
+        // loop through each streamers playforms 
+        // assign the liveSteam variable to the live stream url 
+         for (const platform of streamerPlatforms) {
+            console.log(platform.stream_url)
+            liveStream = platform.stream_url;
+         }
+
+            streamerProfile = await fetchPlayerProfile(streamer.username)
+            // fetch streamer country 
+            // Extracting the country code: 
+            const countryUrl = streamerProfile.country; // returns a string (country url) 
+            const countryCode = extractPlayerCountryCode(countryUrl); // extract the country code form url
+            // fetch the country name 
+            streamerCountry = await fetchPlayerCountry(countryCode);
+
+    
+            // filtering the country data by using 'continue' if the expression returns false 
+            if (streamerSelectedCountries !== 'all' && countryCode !== streamerSelectedCountries) continue; 
     // create div and append
-    const liveStreamerDiV = createLiveStreamerDiv(streamerProfile, streamerCountry);
+    const liveStreamerDiV = createLiveStreamerDiv(streamerProfile, streamerCountry, liveStream);
     liveStreamerContainer.appendChild(liveStreamerDiV);
 
      }
@@ -825,23 +841,16 @@ async function fetchSelectedLiveStreamers() {
 
 // create div to hold and display live streamer data 
 
-function createLiveStreamerDiv(profile, country) {
+function createLiveStreamerDiv(profile, country, liveStream) {
 
     const liveStreamerDiv = document.createElement('div');
         liveStreamerDiv.style.border = '1px solid #ddd';
         liveStreamerDiv.style.padding = '10px';
         liveStreamerDiv.style.margin = '5px';
 
+        
       
-        // check if player is a streamer 
-    // if so, then a link to the players streaming channel will be displayed 
-    const isStreamer = profile.is_streamer; // returns true or false
-    let streamerMessage;
-    if (isStreamer) {
-         streamerMessage = `<p><strong>Streaming Platform:</strong> <a href="${profile.twitch_url}" target="_blank">Twitch</a></p>`;
-    } else {
-         streamerMessage = `<p>Not a Streamer</p>`;
-    }
+      
    
              liveStreamerDiv.innerHTML = `
              <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
@@ -849,7 +858,9 @@ function createLiveStreamerDiv(profile, country) {
              <p><strong>Username:</strong> ${profile.username}</p>
              <p><strong>Title:</strong> ${profile.title}</p>
              <p><strong>Country:</strong> ${country}</p>
-             ${streamerMessage}
+             <p><strong>Live Stream:</strong> <a href="${liveStream}" target="_blank">Twitch</a></p>
+            
+             
              
              
      
