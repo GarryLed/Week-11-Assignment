@@ -147,14 +147,39 @@ loop through titledUsername array
 3. Leaderboards 
 
 Endpoints: 
+/leaderboards 
 
 Requirements: 
 
 
 Inputs: 
+dropdown menus:
+Games:
+all 
+Blitz
+Bullet 
+Rapid 
+
+countries:
+All 
+United States 
+United Kingdom 
+Russia 
+Ukraine 
+India 
 
 
 Outputs: 
+Leaderboard:
+position 
+atatar 
+player username 
+title 
+counrty 
+rating 
+wins 
+losses 
+draws 
 
 
 Clarifying questions: 
@@ -187,12 +212,29 @@ renderLeaderboards()
 renderBlitzLeaderboard()
 renderBulletLeaderboard()
 renderRapidLeaderboard()
-renderChessDailyLeaderboard()
 fetchPlayerProfile()
 fetchPlayerCountry()
 fetchPlayerStats()
 fetchPlayerTitle()
 
+ALGORITHM:
+- User selects a game type and or country (drop down menu )
+- user clicks the "Get leaderboard results" button (add event listener here)
+- fetch the leaderboard data using teh /leaderboards endpoint 
+  - this will return a list of the top players 
+  - extract the players username, rank  and score 
+- loop through the players array 
+  - extract: 
+    - name 
+    - username 
+    - avatar 
+    - title 
+    - country 
+- Filter by country (fetch)
+  - if player is not form selected country then skip to next player 
+- get stats for the palyer (fetch)
+- get streamer data (fetch)
+- create a fuction that will create the div for displaying data 
 
 
 
@@ -510,18 +552,50 @@ async function fetchLeaderboards() {
 }
 
 
-function createLeaderboardDiv(profile, country, playerStats, typeOfGame) {
+
+
+function createLeaderboardDiv(profile, rank, score, country, playerStats) {
 
     const leaderboardDiv = document.createElement('div');
         leaderboardDiv.style.border = '1px solid #ddd';
         leaderboardDiv.style.padding = '10px';
         leaderboardDiv.style.margin = '5px';
+
+        const typeOfGame = "daily";
+        // check if player is a streamer 
+    // if so, then a link to the players streaming channel will be displayed 
+    const isStreamer = profile.is_streamer; // returns true or false
+    let streamerMessage;
+    if (isStreamer) {
+         streamerMessage = `<p><strong>Streaming Platform:</strong> <a href="${profile.twitch_url}" target="_blank">Twitch</a></p>`;
+    } else {
+         streamerMessage = `<p>Not a Streamer</p>`;
+    }
+   
+             leaderboardDiv.innerHTML = `
+             <p><strong>Rank:</strong> ${rank}</p>
+             <p><strong>Score:</strong> ${score}</p>
+             <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
+             <p><strong>Player Name:</strong> ${profile.name}</p>
+             <p><strong>Username:</strong> ${profile.username}</p>
+             <p><strong>Title:</strong> ${profile.title}</p>
+             <p><strong>Country:</strong> ${country}</p>
+             ${streamerMessage}
+             
+             
+     
+     `;
+     return leaderboardDiv; 
+       
+
+
+        /*
      // there is a lot of similar code below. Maybe I can refactor 
      if (typeOfGame === 'live_bullet') {
         leaderboardDiv.innerHTML = `
                 <h3>Bullet Chess</h3>
-                <p><strong>Rank:</strong> ${profile.rank}</p>
-               <p><strong>Score:</strong> ${profile.score}</p>
+                <p><strong>Rank:</strong> ${leaderboards.daily.rank}</p>
+               <p><strong>Score:</strong> ${leaderboards.daily.score}</p>
                 <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
                 <p><strong>Player Name:</strong> ${profile.name}</p>
                 <p><strong>Username:</strong> ${profile.username}</p>
@@ -569,17 +643,33 @@ return leaderboardDiv;
 
    `;
 return leaderboardDiv; 
-      } else {
-       leaderboardDiv.innerHTML = `<p>No data is available for this game</p>`;
-       return leaderboardDiv
-      }  
+      } else if (typeOfGame === 'daily'){
+        leaderboardDiv.innerHTML = `
+                <h3>Daily</h3>
+                <p><strong>Rank:</strong> ${typeOfGame.rank}</p>
+                <p><strong>Score:</strong> ${typeOfGame.score}</p>
+                <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
+                <p><strong>Player Name:</strong> ${profile.name}</p>
+                <p><strong>Username:</strong> ${profile.username}</p>
+                <p><strong>Title:</strong> ${profile.title}</p>
+                
+ 
+    `;
+ return leaderboardDiv; 
 }
+else {
+    leaderboardDiv.innerHTML = `<p>No data is available for this game</p>`;
+    return leaderboardDiv
+}  
+*/
+}
+
 
 async function fetchFilteredLeaderboards() {
     // create a leaderboard div container 
     const  leaderboardContainer = document.getElementById('leaderboards');
     // get leaderboard games form dropdown menu 
-    const leaderboardSelectedGame = document.getElementById('leaderboard-games-filter').value;
+    //const leaderboardSelectedGame = document.getElementById('leaderboard-games-filter').value;
 
     // get leaderboard countries from dropdown menu 
     const leaderboardSelectedCountries = document.getElementById('leaderboard-country-filter').value;
@@ -587,17 +677,20 @@ async function fetchFilteredLeaderboards() {
     leaderboardContainer.innerHTML = ''; 
 
     // fetch the leaderboard data 
-    const leaderboardData = await fetchLeaderboards();
+    const leaderboardsResponse = await fetchLeaderboards();
 
-   const games = leaderboardData[leaderboardSelectedGame]; // need to review this 
+   const leaderboardData = leaderboardsResponse.daily;
 
-   console.log(leaderboardSelectedGame);
+   console.log(leaderboardSelectedCountries);
    console.log(leaderboardData);
-   console.log(games);
+   
 
-   for (const player of games) {
+   for (const player of leaderboardData) {
     const playerProfile = await fetchPlayerProfile(player.username);
     console.log(playerProfile);
+
+    const rank = player.rank;
+    const score = player.score;
 
     
     // Extracting the country code: 
@@ -607,12 +700,13 @@ async function fetchFilteredLeaderboards() {
     // fetch the country name 
     const playerCountry = await fetchPlayerCountry(countryCode);
 
-    // fetch the stats 
-    const playerStats = await fetchPlayerStats(player.username);
+   
     
 
+      // filtering the country data by using 'continue' if the expression returns false 
+      if (leaderboardSelectedCountries !== 'all' && countryCode !== leaderboardSelectedCountries) continue; 
     // create div and append
-    const leaderboardDiv = createLeaderboardDiv(playerProfile, playerCountry, playerStats, leaderboardSelectedGame);
+    const leaderboardDiv = createLeaderboardDiv(playerProfile, rank, score, playerCountry);
     leaderboardContainer.appendChild(leaderboardDiv);
    }
 }
