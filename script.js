@@ -289,7 +289,7 @@ document.getElementById('get-titled-player-profiles').addEventListener('click', 
 
 document.getElementById('get-leaderboard-results').addEventListener('click', fetchFilteredLeaderboards);
 
-document.getElementById('get-live-streamers').addEventListener('click', fetchStreamers);
+document.getElementById('get-live-streamers').addEventListener('click', fetchSelectedLiveStreamers);
       
     } catch (error) {
         console.error('Oops, an error occured', error);
@@ -686,6 +686,7 @@ async function fetchFilteredLeaderboards() {
    
 
    for (const player of leaderboardData) {
+    // fetch player profile 
     const playerProfile = await fetchPlayerProfile(player.username);
     console.log(playerProfile);
 
@@ -725,6 +726,7 @@ async function fetchFilteredLeaderboards() {
 
 //---------------------- Live Streamers Functinos ------------------------------
 
+/*
 async function fetchStreamers() {
     const url = `https://api.chess.com/pub/streamers`;
         const streamerContainer = document.getElementById('streamer-container');
@@ -761,10 +763,99 @@ async function fetchStreamers() {
         return null;
         }
 }
+*/
+
+// fetch streames 
+async function fetchStreamers() {
+        try {
+            const response = await fetch('https://api.chess.com/pub/streamers');
+            if (!response.ok) {
+                throw new Error(`EHTTP Error! Status: ${response.status}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+}
+
+
 
 // fiilter streamers by titles and countries 
+async function fetchSelectedLiveStreamers() {
+     // create a streamer div container 
+     const  liveStreamerContainer = document.getElementById('streamer-container');
+     // get leaderboard games form dropdown menu 
+     const streamerTitle = document.getElementById('streamer-title-filter').value;
+ 
+     // get leaderboard countries from dropdown menu 
+     const streamerSelectedCountries = document.getElementById('streamer-country-filter').value;
+ 
+     liveStreamerContainer.innerHTML = ''; 
+
+     const streamerResponse = await fetchStreamers();
+
+     const streamers = streamerResponse.streamers;
+
+     console.log(streamers);
 
 
+     for (const streamer of streamers) {
+
+        console.log(streamer);
+        // fetch streamer profile 
+        const streamerProfile = await fetchPlayerProfile(streamer.username)
+
+        // fetch streamer country 
+        // Extracting the country code: 
+    const countryUrl = streamerProfile.country; // returns a string (country url) 
+    const countryCode = extractPlayerCountryCode(countryUrl); // extract the country code form url
+
+    // fetch the country name 
+    const streamerCountry = await fetchPlayerCountry(countryCode);
+
+    // filtering the country data by using 'continue' if the expression returns false 
+    if (streamerSelectedCountries !== 'all' && countryCode !== streamerSelectedCountries) continue; 
+    // create div and append
+    const liveStreamerDiV = createLiveStreamerDiv(streamerProfile, streamerCountry);
+    liveStreamerContainer.appendChild(liveStreamerDiV);
+
+     }
+}
+
+// create div to hold and display live streamer data 
+
+function createLiveStreamerDiv(profile, country) {
+
+    const liveStreamerDiv = document.createElement('div');
+        liveStreamerDiv.style.border = '1px solid #ddd';
+        liveStreamerDiv.style.padding = '10px';
+        liveStreamerDiv.style.margin = '5px';
+
+      
+        // check if player is a streamer 
+    // if so, then a link to the players streaming channel will be displayed 
+    const isStreamer = profile.is_streamer; // returns true or false
+    let streamerMessage;
+    if (isStreamer) {
+         streamerMessage = `<p><strong>Streaming Platform:</strong> <a href="${profile.twitch_url}" target="_blank">Twitch</a></p>`;
+    } else {
+         streamerMessage = `<p>Not a Streamer</p>`;
+    }
+   
+             liveStreamerDiv.innerHTML = `
+             <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
+            
+             <p><strong>Username:</strong> ${profile.username}</p>
+             <p><strong>Title:</strong> ${profile.title}</p>
+             <p><strong>Country:</strong> ${country}</p>
+             ${streamerMessage}
+             
+             
+     
+     `;
+     return liveStreamerDiv; 
+}
 
 
 
