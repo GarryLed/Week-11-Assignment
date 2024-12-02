@@ -297,8 +297,9 @@ document.getElementById('get-live-streamers').addEventListener('click', fetchSel
 });
 
 // fetch player profiles 
+// takes username as parameter 
 async function fetchPlayerProfile(username) {
-    // player 
+    
     const url = `https://api.chess.com/pub/player/${username}`;
     try {
         const response = await fetch(url);
@@ -333,12 +334,13 @@ async function fetchPlayerStats(username) {
 // dynamically create a player stats div and populate the inner HTML 
 function createPlayerStatsDiv(profile, playerStats, typeOfGame ) {
     
+    // styling the div
         const playerStatsDiv = document.createElement('div');
         playerStatsDiv.style.border = '1px solid #ddd';
         playerStatsDiv.style.padding = '10px';
         playerStatsDiv.style.margin = '5px';
  
-        // there is a lot of similar code below. Maybe I can refactor 
+        //  Maybe I can refactor 
        if (typeOfGame === 'live_bullet') {
          playerStatsDiv.innerHTML = `
                  <h3>Bullet Chess</h3>
@@ -464,7 +466,7 @@ async function fetchPlayerProfilesForSelectedTitles() {
 
     // get data from checkboxes
     const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-    // Titled player container 
+    // titled player container 
     const  titledPlayersContainer = document.getElementById('titled-player-profiles');
     // selected country 
     const titledPlayerSelectedCounty = document.getElementById('titled-player-selected-countries').value;
@@ -487,24 +489,24 @@ async function fetchPlayerProfilesForSelectedTitles() {
             // at each iteration fetch the player profile 
             const titledPlayerProfile = await fetchPlayerProfile(username);
 
-        
-
             // Extracting the country code: 
             const countryUrl = titledPlayerProfile.country; // returns a string (country url) 
             const countryCode = extractPlayerCountryCode(countryUrl); // extract the country code form url
-
             const playerCountry = await fetchPlayerCountry(countryCode);
 
             // filtering the country data by using 'continue' if the expression returns false 
             if (titledPlayerSelectedCounty !== 'all' && countryCode !== titledPlayerSelectedCounty) continue; 
 
-            const titledPlayerProfileDiv = createTitlePlayerDiv(titledPlayerProfile, playerCountry, );
+            // create aa title player div 
+            const titledPlayerProfileDiv = createTitlePlayerDiv(titledPlayerProfile, playerCountry);
+            // append title player div to parent div 
             titledPlayersContainer.appendChild(titledPlayerProfileDiv);
         
     }
     }
 }
 
+// div to display title player data 
 function createTitlePlayerDiv(profile, country) {
     const titledPlayerProfileDiv = document.createElement('div');
     titledPlayerProfileDiv.style.border = '1px solid #ddd';
@@ -513,6 +515,7 @@ function createTitlePlayerDiv(profile, country) {
 
     // check if player is a streamer 
     // if so, then a link to the players streaming channel will be displayed 
+    // else display player is not a stereamer 
     const isStreamer = profile.is_streamer; // returns true or false
     let streamerMessage;
     if (isStreamer) {
@@ -537,6 +540,7 @@ function createTitlePlayerDiv(profile, country) {
 
 //------------------------ Leaderboard Functions  -------------------------------
 
+// fetch the leaderboard data 
 async function fetchLeaderboards() {
     
     try {
@@ -554,19 +558,18 @@ async function fetchLeaderboards() {
 
 
 
-
-function createLeaderboardDiv(profile, rank, score, country, playerStats) {
+// div to display leaderboard data 
+function createLeaderboardDiv(profile, leaderboards, country, playerStats, typeOfGame) {
 
     const leaderboardDiv = document.createElement('div');
         leaderboardDiv.style.border = '1px solid #ddd';
         leaderboardDiv.style.padding = '10px';
-        leaderboardDiv.style.margin = '5px';
-
-        const typeOfGame = "daily";
+       
         // check if player is a streamer 
     // if so, then a link to the players streaming channel will be displayed 
     const isStreamer = profile.is_streamer; // returns true or false
     let streamerMessage;
+    /*
     if (isStreamer) {
          streamerMessage = `<p><strong>Streaming Platform:</strong> <a href="${profile.twitch_url}" target="_blank">Twitch</a></p>`;
     } else {
@@ -582,21 +585,18 @@ function createLeaderboardDiv(profile, rank, score, country, playerStats) {
              <p><strong>Title:</strong> ${profile.title}</p>
              <p><strong>Country:</strong> ${country}</p>
              ${streamerMessage}
-             
-             
-     
+
      `;
      return leaderboardDiv; 
-       
+      */ 
 
-
-        /*
+        
      // there is a lot of similar code below. Maybe I can refactor 
      if (typeOfGame === 'live_bullet') {
         leaderboardDiv.innerHTML = `
                 <h3>Bullet Chess</h3>
-                <p><strong>Rank:</strong> ${leaderboards.daily.rank}</p>
-               <p><strong>Score:</strong> ${leaderboards.daily.score}</p>
+              
+               
                 <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
                 <p><strong>Player Name:</strong> ${profile.name}</p>
                 <p><strong>Username:</strong> ${profile.username}</p>
@@ -606,6 +606,7 @@ function createLeaderboardDiv(profile, rank, score, country, playerStats) {
                 <p><strong>Total Wins:</strong> ${playerStats.chess_bullet.record.win}</p>
                 <p><strong>Total Losses:</strong> ${playerStats.chess_bullet.record.loss}</p>
                 <p><strong>Total Draws:</strong> ${playerStats.chess_bullet.record.draw}</p>
+                <p><strong>Country:</strong> ${country}</p>
    
             `;
     return leaderboardDiv; 
@@ -624,6 +625,7 @@ function createLeaderboardDiv(profile, rank, score, country, playerStats) {
                <p><strong>Total Wins:</strong> ${playerStats.chess_blitz.record.win}</p>
                <p><strong>Total Losses:</strong> ${playerStats.chess_blitz.record.loss}</p>
                <p><strong>Total Draws:</strong> ${playerStats.chess_blitz.record.draw}</p>
+               <p><strong>Country:</strong> ${country}</p>
 
    `;
 return leaderboardDiv; 
@@ -641,6 +643,7 @@ return leaderboardDiv;
                <p><strong>Total Wins:</strong> ${playerStats.chess_rapid.record.win}</p>
                <p><strong>Total Losses:</strong> ${playerStats.chess_rapid.record.loss}</p>
                <p><strong>Total Draws:</strong> ${playerStats.chess_rapid.record.draw}</p>
+               <p><strong>Country:</strong> ${country}</p>
 
    `;
 return leaderboardDiv; 
@@ -653,6 +656,7 @@ return leaderboardDiv;
                 <p><strong>Player Name:</strong> ${profile.name}</p>
                 <p><strong>Username:</strong> ${profile.username}</p>
                 <p><strong>Title:</strong> ${profile.title}</p>
+                <p><strong>Country:</strong> ${country}</p>
                 
  
     `;
@@ -662,109 +666,63 @@ else {
     leaderboardDiv.innerHTML = `<p>No data is available for this game</p>`;
     return leaderboardDiv
 }  
-*/
+
 }
 
-
+// fetch filtered leaderboard data 
 async function fetchFilteredLeaderboards() {
     // create a leaderboard div container 
     const  leaderboardContainer = document.getElementById('leaderboards');
+
     // get leaderboard games form dropdown menu 
-    //const leaderboardSelectedGame = document.getElementById('leaderboard-games-filter').value;
+    const leaderboardSelectedGame = document.getElementById('leaderboard-games-filter').value;
 
     // get leaderboard countries from dropdown menu 
     const leaderboardSelectedCountries = document.getElementById('leaderboard-country-filter').value;
-
+    
     leaderboardContainer.innerHTML = ''; 
-
+    
     // fetch the leaderboard data 
     const leaderboardsResponse = await fetchLeaderboards();
-
+    
+    // where can I get the leaderboards for each game? 
+    // leaderboard for all games 
    const leaderboardData = leaderboardsResponse.daily;
 
    console.log(leaderboardSelectedCountries);
    console.log(leaderboardData);
    
 
+   // loop through leaderboards 
    for (const player of leaderboardData) {
     // fetch player profile 
     const playerProfile = await fetchPlayerProfile(player.username);
     console.log(playerProfile);
 
+    // get player rank and score and store values for display  
     const rank = player.rank;
     const score = player.score;
 
-    
-    // Extracting the country code: 
+    // fetch player stats for the leaderboard data 
+    const playerStats = await fetchPlayerStats(player.username);
+
+    // extracting the country code: 
     const countryUrl = playerProfile.country; // returns a string (country url) 
     const countryCode = extractPlayerCountryCode(countryUrl); // extract the country code form url
-
     // fetch the country name 
     const playerCountry = await fetchPlayerCountry(countryCode);
 
-   
-    
 
       // filtering the country data by using 'continue' if the expression returns false 
       if (leaderboardSelectedCountries !== 'all' && countryCode !== leaderboardSelectedCountries) continue; 
+
     // create div and append
-    const leaderboardDiv = createLeaderboardDiv(playerProfile, rank, score, playerCountry);
+    const leaderboardDiv = createLeaderboardDiv(playerProfile, leaderboardData, playerCountry, playerStats, leaderboardSelectedGame);
     leaderboardContainer.appendChild(leaderboardDiv);
    }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 //---------------------- Live Streamers Functinos ------------------------------
-
-/*
-async function fetchStreamers() {
-    const url = `https://api.chess.com/pub/streamers`;
-        const streamerContainer = document.getElementById('streamer-container');
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`EHTTP Error! Status: ${response.status}`);
-        }
-        const data=  await response.json();
-        console.log(data.streamers);
-        data.streamers.forEach(player => {
-            const PlayerElement = document.createElement('div');
-            PlayerElement.setAttribute('class', 'leaderboard-card')
-            PlayerElement.style.border = '1px solid #ddd';
-            PlayerElement.style.padding - '5px';
-        
-            const avatar = document.createElement('img');
-            avatar.setAttribute('src', player.avatar);
-            avatar.setAttribute('width', '100px');
-            avatar.setAttribute('height', '100px');
-            
-            const username = document.createElement('h3');
-            username.textContent =   `Username: ${player.username};`
-           
-            
-           
-            PlayerElement.appendChild(avatar);
-            PlayerElement.appendChild(username);
-           
-            
-            streamerContainer.appendChild(PlayerElement);
-        })} catch (error) {
-        console.error(error);
-        return null;
-        }
-}
-*/
 
 // fetch streames 
 async function fetchStreamers() {
@@ -848,17 +806,13 @@ function createLiveStreamerDiv(profile, country, liveStream) {
         liveStreamerDiv.style.padding = '10px';
         liveStreamerDiv.style.margin = '5px';
 
-        
-      
-      
-   
              liveStreamerDiv.innerHTML = `
              <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
             
              <p><strong>Username:</strong> ${profile.username}</p>
              <p><strong>Title:</strong> ${profile.title}</p>
              <p><strong>Country:</strong> ${country}</p>
-             <p><strong>Live Stream:</strong> <a href="${liveStream}" target="_blank">Twitch</a></p>
+             <p><strong>Watch Live Stream:</strong> <a href="${liveStream}" target="_blank">Twitch</a></p>
             
              
              

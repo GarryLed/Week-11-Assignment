@@ -43,15 +43,18 @@ html {
     flex-direction: column;
     height: 100%;
   }
-
+  
   /* overflow for each displayed data */
   #player-stats, #titled-player-profiles, #leaderboards, #streamer-container {
     display: flex; 
-    overflow-y: auto;
+    overflow-x: auto;
     padding: 0.7em;
     margin: .5em;
-    border-bottom: 2px solid #ddd;
+    ;
+    align-items: stretch;
+    flex-grow: 3;
   }
-  
+
+
 
  
