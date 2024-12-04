@@ -47,10 +47,9 @@ html {
   /* overflow for each displayed data */
   #player-stats, #titled-player-profiles, #leaderboards, #streamer-container {
     display: flex; 
-    overflow-x: auto;
+   overflow-y: auto; 
     padding: 0.7em;
     margin: .5em;
-    ;
     align-items: stretch;
     flex-grow: 3;
   }

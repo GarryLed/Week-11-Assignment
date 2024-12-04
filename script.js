@@ -337,6 +337,8 @@ function createPlayerStatsDiv(profile, playerStats, typeOfGame ) {
     // styling the div
         const playerStatsDiv = document.createElement('div');
         playerStatsDiv.style.border = '1px solid #ddd';
+        playerStatsDiv.style.borderRadius = '10px';
+        playerStatsDiv.style.backgroundColor = "aquamarine";
         playerStatsDiv.style.padding = '10px';
         playerStatsDiv.style.margin = '5px';
  
@@ -344,7 +346,8 @@ function createPlayerStatsDiv(profile, playerStats, typeOfGame ) {
        if (typeOfGame === 'live_bullet') {
          playerStatsDiv.innerHTML = `
                  <h3>Bullet Chess</h3>
-                 <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
+                 <img src="${profile.avatar}" alt="${profile.username}" style="width: 200px; height: 200px;">
+                
                  <p><strong>Player Name:</strong> ${profile.name}</p>
                  <p><strong>Username:</strong> ${profile.username}</p>
                  <p><strong>Title:</strong> ${profile.title}</p>
@@ -359,7 +362,7 @@ function createPlayerStatsDiv(profile, playerStats, typeOfGame ) {
        } else if (typeOfGame === 'live_blitz'){
         playerStatsDiv.innerHTML = `
                 <h3>Blitz Chess</h3>
-                <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
+                <img src="${profile.avatar}" alt="${profile.username}" style="width: 200px; height: 200px;">
                 <p><strong>Player Name:</strong> ${profile.name}</p>
                 <p><strong>Username:</strong> ${profile.username}</p>
                 <p><strong>Title:</strong> ${profile.title}</p>
@@ -374,7 +377,7 @@ return playerStatsDiv;
        }   else if (typeOfGame === 'live_rapid'){
         playerStatsDiv.innerHTML = `
                 <h3>Rapid Chess</h3>
-                <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
+                <img src="${profile.avatar}" alt="${profile.username}" style="width: 200px; height: 200px;">
                 <p><strong>Player Name:</strong> ${profile.name}</p>
                 <p><strong>Username:</strong> ${profile.username}</p>
                 <p><strong>Title:</strong> ${profile.title}</p>
@@ -510,6 +513,8 @@ async function fetchPlayerProfilesForSelectedTitles() {
 function createTitlePlayerDiv(profile, country) {
     const titledPlayerProfileDiv = document.createElement('div');
     titledPlayerProfileDiv.style.border = '1px solid #ddd';
+    titledPlayerProfileDiv.style.borderRadius = '10px';
+   titledPlayerProfileDiv.style.backgroundColor = "aquamarine";
     titledPlayerProfileDiv.style.padding = '10px';
     titledPlayerProfileDiv.style.margin = '5px';
 
@@ -525,7 +530,7 @@ function createTitlePlayerDiv(profile, country) {
     }
    
         titledPlayerProfileDiv.innerHTML = `
-             <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
+             <img src="${profile.avatar}" alt="${profile.username}" style="width: 200px; height: 200px;">
              <p><strong>Player Name:</strong> ${profile.name}</p>
              <p><strong>Username:</strong> ${profile.username}</p>
              <p><strong>Title:</strong> ${profile.title}</p>
@@ -556,118 +561,36 @@ async function fetchLeaderboards() {
     
 }
 
-
-
 // div to display leaderboard data 
-function createLeaderboardDiv(profile, leaderboards, country, playerStats, typeOfGame) {
+function createLeaderboardDiv(player, playerStats, country, gameType) {
 
     const leaderboardDiv = document.createElement('div');
-        leaderboardDiv.style.border = '1px solid #ddd';
-        leaderboardDiv.style.padding = '10px';
-       
-        // check if player is a streamer 
-    // if so, then a link to the players streaming channel will be displayed 
-    const isStreamer = profile.is_streamer; // returns true or false
-    let streamerMessage;
-    /*
-    if (isStreamer) {
-         streamerMessage = `<p><strong>Streaming Platform:</strong> <a href="${profile.twitch_url}" target="_blank">Twitch</a></p>`;
-    } else {
-         streamerMessage = `<p>Not a Streamer</p>`;
-    }
-   
-             leaderboardDiv.innerHTML = `
-             <p><strong>Rank:</strong> ${rank}</p>
-             <p><strong>Score:</strong> ${score}</p>
-             <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
-             <p><strong>Player Name:</strong> ${profile.name}</p>
-             <p><strong>Username:</strong> ${profile.username}</p>
-             <p><strong>Title:</strong> ${profile.title}</p>
-             <p><strong>Country:</strong> ${country}</p>
-             ${streamerMessage}
-
-     `;
-     return leaderboardDiv; 
-      */ 
-
-        
-     // there is a lot of similar code below. Maybe I can refactor 
-     if (typeOfGame === 'live_bullet') {
-        leaderboardDiv.innerHTML = `
-                <h3>Bullet Chess</h3>
-              
-               
-                <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
-                <p><strong>Player Name:</strong> ${profile.name}</p>
-                <p><strong>Username:</strong> ${profile.username}</p>
-                <p><strong>Title:</strong> ${profile.title}</p>
-                <p><strong>Current Rating:</strong> ${playerStats.chess_bullet.last.rating}</p>
-                <p><strong>Best Rating:</strong> ${playerStats.chess_bullet.best.rating}</p>
-                <p><strong>Total Wins:</strong> ${playerStats.chess_bullet.record.win}</p>
-                <p><strong>Total Losses:</strong> ${playerStats.chess_bullet.record.loss}</p>
-                <p><strong>Total Draws:</strong> ${playerStats.chess_bullet.record.draw}</p>
-                <p><strong>Country:</strong> ${country}</p>
-   
-            `;
-    return leaderboardDiv; 
-      } else if (typeOfGame === 'live_blitz'){
+    leaderboardDiv.style.border = '1px solid #ddd';
+    leaderboardDiv.style.backgroundColor = "aquamarine";
+    leaderboardDiv.style.borderRadius = '10px';
+    leaderboardDiv.style.padding = '10px';
+    leaderboardDiv.style.margin = '5px';
+    
        leaderboardDiv.innerHTML = `
-               <h3>Blitz Chess</h3>
-               <p><strong>Rank:</strong> ${profile.rank}</p>
-               <p><strong>Score:</strong> ${profile.score}</p>
-               <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
-               <p><strong>Player Name:</strong> ${profile.name}</p>
-               <p><strong>Username:</strong> ${profile.username}</p>
-               <p><strong>Title:</strong> ${profile.title}</p>
-
+               <h3>${gameType}</h3>
+               <p><strong>Rank:</strong> ${player.rank}</p>
+               <p><strong>Score:</strong> ${player.score}</p>
+               <img src="${player.avatar}" alt="${player.username}" style="width: 200px; height: 200px;">
+               <p><strong>Player Name:</strong> ${player.name}</p>
+               <p><strong>Username:</strong> ${player.username}</p>
+               <p><strong>Title:</strong> ${player.title}</p>
+               <p><strong>Country:</strong> ${country}</p>
                <p><strong>Current Rating:</strong> ${playerStats.chess_blitz.last.rating}</p>
                <p><strong>Best Rating:</strong> ${playerStats.chess_blitz.best.rating}</p>
                <p><strong>Total Wins:</strong> ${playerStats.chess_blitz.record.win}</p>
                <p><strong>Total Losses:</strong> ${playerStats.chess_blitz.record.loss}</p>
                <p><strong>Total Draws:</strong> ${playerStats.chess_blitz.record.draw}</p>
-               <p><strong>Country:</strong> ${country}</p>
-
+             
    `;
 return leaderboardDiv; 
-      }   else if (typeOfGame === 'live_rapid'){
-       leaderboardDiv.innerHTML = `
-               <h3>Rapid Chess</h3>
-               <p><strong>Rank:</strong> ${profile.rank}</p>
-               <p><strong>Score:</strong> ${profile.score}</p>
-               <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
-               <p><strong>Player Name:</strong> ${profile.name}</p>
-               <p><strong>Username:</strong> ${profile.username}</p>
-               <p><strong>Title:</strong> ${profile.title}</p>
-               <p><strong>Current Rating:</strong> ${playerStats.chess_rapid.last.rating}</p>
-               <p><strong>Best Rating:</strong> ${playerStats.chess_rapid.best.rating}</p>
-               <p><strong>Total Wins:</strong> ${playerStats.chess_rapid.record.win}</p>
-               <p><strong>Total Losses:</strong> ${playerStats.chess_rapid.record.loss}</p>
-               <p><strong>Total Draws:</strong> ${playerStats.chess_rapid.record.draw}</p>
-               <p><strong>Country:</strong> ${country}</p>
+     
+} 
 
-   `;
-return leaderboardDiv; 
-      } else if (typeOfGame === 'daily'){
-        leaderboardDiv.innerHTML = `
-                <h3>Daily</h3>
-                <p><strong>Rank:</strong> ${typeOfGame.rank}</p>
-                <p><strong>Score:</strong> ${typeOfGame.score}</p>
-                <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
-                <p><strong>Player Name:</strong> ${profile.name}</p>
-                <p><strong>Username:</strong> ${profile.username}</p>
-                <p><strong>Title:</strong> ${profile.title}</p>
-                <p><strong>Country:</strong> ${country}</p>
-                
- 
-    `;
- return leaderboardDiv; 
-}
-else {
-    leaderboardDiv.innerHTML = `<p>No data is available for this game</p>`;
-    return leaderboardDiv
-}  
-
-}
 
 // fetch filtered leaderboard data 
 async function fetchFilteredLeaderboards() {
@@ -675,10 +598,10 @@ async function fetchFilteredLeaderboards() {
     const  leaderboardContainer = document.getElementById('leaderboards');
 
     // get leaderboard games form dropdown menu 
-    const leaderboardSelectedGame = document.getElementById('leaderboard-games-filter').value;
+    const selectedGame = document.getElementById('leaderboard-games-filter').value;
 
     // get leaderboard countries from dropdown menu 
-    const leaderboardSelectedCountries = document.getElementById('leaderboard-country-filter').value;
+    //const leaderboardSelectedCountries = document.getElementById('leaderboard-country-filter').value;
     
     leaderboardContainer.innerHTML = ''; 
     
@@ -687,39 +610,62 @@ async function fetchFilteredLeaderboards() {
     
     // where can I get the leaderboards for each game? 
     // leaderboard for all games 
-   const leaderboardData = leaderboardsResponse.daily;
-
-   console.log(leaderboardSelectedCountries);
-   console.log(leaderboardData);
    
 
-   // loop through leaderboards 
-   for (const player of leaderboardData) {
-    // fetch player profile 
-    const playerProfile = await fetchPlayerProfile(player.username);
-    console.log(playerProfile);
+   //console.log(leaderboardsResponse);
 
-    // get player rank and score and store values for display  
-    const rank = player.rank;
-    const score = player.score;
+   // fileer leaderboards by game type 
+   const dailyLeaderboard = leaderboardsResponse.daily; 
+   const blitzLeaderboard = leaderboardsResponse.live_blitz;
+   const bulletLeaderboard = leaderboardsResponse.live_bullet;
+   const rapidLeaderboard = leaderboardsResponse.live_rapid; 
 
-    // fetch player stats for the leaderboard data 
+   //console.log(blitzLeaderboard);
+
+  let currentLeaderboard;
+  let gameType;
+        
+        if (selectedGame === 'chess_daily') {
+        currentLeaderboard = dailyLeaderboard;
+        gameType = 'Chess Daily';
+        console.log(currentLeaderboard);
+        console.log(selectedGame);
+        } else if (selectedGame === 'live_blitz') {
+        currentLeaderboard = blitzLeaderboard;
+        gameType = 'Blitz'
+        console.log(currentLeaderboard);
+        console.log(selectedGame);
+        } else if (selectedGame === 'live_bullet') {
+        currentLeaderboard = bulletLeaderboard;
+        gameType = 'Bullet'
+        console.log(currentLeaderboard);
+        console.log(selectedGame);
+        } else if (selectedGame === 'live_rapid') {
+        currentLeaderboard = rapidLeaderboard;
+        gameType = 'Rapid'
+        console.log(currentLeaderboard);
+        console.log(selectedGame);
+        }
+
+    
+  for (player of currentLeaderboard) {
+
+    //console.log(player)
     const playerStats = await fetchPlayerStats(player.username);
-
+  
+    console.log(playerStats)
     // extracting the country code: 
-    const countryUrl = playerProfile.country; // returns a string (country url) 
+    const countryUrl = player.country; // returns a string (country url) 
     const countryCode = extractPlayerCountryCode(countryUrl); // extract the country code form url
-    // fetch the country name 
+    //fetch the country name 
     const playerCountry = await fetchPlayerCountry(countryCode);
-
-
-      // filtering the country data by using 'continue' if the expression returns false 
-      if (leaderboardSelectedCountries !== 'all' && countryCode !== leaderboardSelectedCountries) continue; 
-
     // create div and append
-    const leaderboardDiv = createLeaderboardDiv(playerProfile, leaderboardData, playerCountry, playerStats, leaderboardSelectedGame);
+    const leaderboardDiv = createLeaderboardDiv(player, playerStats, playerCountry, gameType);
     leaderboardContainer.appendChild(leaderboardDiv);
-   }
+  }
+
+
+  
 }
 
 //---------------------- Live Streamers Functinos ------------------------------
@@ -802,12 +748,14 @@ async function fetchSelectedLiveStreamers() {
 function createLiveStreamerDiv(profile, country, liveStream) {
 
     const liveStreamerDiv = document.createElement('div');
-        liveStreamerDiv.style.border = '1px solid #ddd';
+        liveStreamerDiv.style.border = '2px solid #ddd';
+        liveStreamerDiv.style.backgroundColor = "aquamarine";
+        liveStreamerDiv.style.borderRadius = '10px';
         liveStreamerDiv.style.padding = '10px';
         liveStreamerDiv.style.margin = '5px';
 
              liveStreamerDiv.innerHTML = `
-             <img src="${profile.avatar}" alt="${profile.username}" style="width: 100px; height: 100px;">
+             <img src="${profile.avatar}" alt="${profile.username}" style="width: 200px; height: 200px;">
             
              <p><strong>Username:</strong> ${profile.username}</p>
              <p><strong>Title:</strong> ${profile.title}</p>
