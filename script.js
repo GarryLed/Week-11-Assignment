@@ -338,7 +338,7 @@ function createPlayerStatsDiv(profile, playerStats, typeOfGame ) {
         const playerStatsDiv = document.createElement('div');
         playerStatsDiv.style.border = '1px solid #ddd';
         playerStatsDiv.style.borderRadius = '10px';
-        playerStatsDiv.style.backgroundColor = "aquamarine";
+        playerStatsDiv.style.backgroundColor = "rgb(255, 193, 150";
         playerStatsDiv.style.padding = '10px';
         playerStatsDiv.style.margin = '5px';
  
@@ -514,7 +514,7 @@ function createTitlePlayerDiv(profile, country) {
     const titledPlayerProfileDiv = document.createElement('div');
     titledPlayerProfileDiv.style.border = '1px solid #ddd';
     titledPlayerProfileDiv.style.borderRadius = '10px';
-   titledPlayerProfileDiv.style.backgroundColor = "aquamarine";
+   titledPlayerProfileDiv.style.backgroundColor = "rgb(255, 193, 150";
     titledPlayerProfileDiv.style.padding = '10px';
     titledPlayerProfileDiv.style.margin = '5px';
 
@@ -566,7 +566,7 @@ function createLeaderboardDiv(player, playerStats, country, gameType) {
 
     const leaderboardDiv = document.createElement('div');
     leaderboardDiv.style.border = '1px solid #ddd';
-    leaderboardDiv.style.backgroundColor = "aquamarine";
+    leaderboardDiv.style.backgroundColor = "rgb(255, 193, 150";
     leaderboardDiv.style.borderRadius = '10px';
     leaderboardDiv.style.padding = '10px';
     leaderboardDiv.style.margin = '5px';
@@ -749,7 +749,7 @@ function createLiveStreamerDiv(profile, country, liveStream) {
 
     const liveStreamerDiv = document.createElement('div');
         liveStreamerDiv.style.border = '2px solid #ddd';
-        liveStreamerDiv.style.backgroundColor = "aquamarine";
+        liveStreamerDiv.style.backgroundColor = "rgb(255, 193, 150";
         liveStreamerDiv.style.borderRadius = '10px';
         liveStreamerDiv.style.padding = '10px';
         liveStreamerDiv.style.margin = '5px';
