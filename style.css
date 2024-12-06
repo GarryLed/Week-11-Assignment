@@ -40,6 +40,8 @@ html {
     background-image:url(/images/main_background.jpg);
     opacity: 0.8;
     margin: 20px;
+    padding: 10px;
+    border-radius: 15px;
   }
 
   /* Buttons */

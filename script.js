@@ -226,17 +226,20 @@ renderLiveStreamersPerCountry()
 CODE:
 */
 
+// Event listener for the DOMContent 
 document.addEventListener('DOMContentLoaded', async function () {
     try {
       
 // adding an event listener to the player stats button 
 document.getElementById('get-player-stats').addEventListener('click', fetchStatsForSelectedPlayers);
 
-       
+// adding an event listener to the titled player button 
 document.getElementById('get-titled-player-profiles').addEventListener('click', fetchPlayerProfilesForSelectedTitles);
 
+// adding an event listener to the leaderboard results button 
 document.getElementById('get-leaderboard-results').addEventListener('click', fetchFilteredLeaderboards);
 
+// adding an event listener to the liverstreamers button 
 document.getElementById('get-live-streamers').addEventListener('click', fetchSelectedLiveStreamers);
       
     } catch (error) {
@@ -247,7 +250,7 @@ document.getElementById('get-live-streamers').addEventListener('click', fetchSel
 // fetch player profiles 
 // takes username as parameter 
 async function fetchPlayerProfile(username) {
-    
+    // uses players username datapoint to access the players profile 
     const url = `https://api.chess.com/pub/player/${username}`;
     try {
         const response = await fetch(url);
@@ -261,7 +264,6 @@ async function fetchPlayerProfile(username) {
     }
 }
   
-
 // fetch player stats 
 // takes usernames as parameter 
 async function fetchPlayerStats(username) {
@@ -291,7 +293,7 @@ function createPlayerStatsDiv(player, gameName, playerStats ) {
         playerStatsDiv.style.margin = '5px';
  
       
-        // dynamically creating content 
+        // dynamically displaying content 
         playerStatsDiv.innerHTML = `
                <h3>${gameName}</h3>
                <img src="${player.avatar}" alt="${player.username}" style="width: 200px; height: 200px;">
@@ -305,54 +307,62 @@ function createPlayerStatsDiv(player, gameName, playerStats ) {
                <p><strong>Total Draws:</strong> ${playerStats.record.draw}</p>
              
    `;
-   return playerStatsDiv;
-    
+   return playerStatsDiv;   
 }
+
 // async function to fetch stats for selected players 
-async function fetchStatsForSelectedPlayers() {
-    
+async function fetchStatsForSelectedPlayers() {  
+    // find all the checked checkboxes
     const checkboxes = document.querySelectorAll(`input[type="checkbox"]:checked`);
+
     // array to store selected players
     const selectedPlayers = [];
 
-    // getting 'player stats div by its id 
+    // getting player stats div by its id 
     const playerStatsContainer = document.getElementById('player-stats');
 
+    // return the selected game form the dropdown menu 
     const selectedGame = document.getElementById('live-games').value;
    
+    // loop through checkboxes 
+    // at each iteration push each element to the selectedPlayers array
     checkboxes.forEach(checkbox => {
-        selectedPlayers.push(checkbox.value); // push each element to the selectedPlayers array
+        selectedPlayers.push(checkbox.value); 
     });
 
+    // empty the container content 
     playerStatsContainer.innerHTML = "";
 
-  let gameName;
-  let gameStats;
+    // variables for filtering data for display
+    let gameName;
+    let gameStats;
         
     // for..of loop lets us use the 'await' keyword within the loop 
     for (const username of selectedPlayers) {
-        
+        // fetch the player profile 
         const playerProfile = await fetchPlayerProfile(username);
-        
-        if (selectedGame === 'live_blitz') {
-           
-            gameName = 'Blitz';
-            gameStats = playerStats.chess_blitz;
-            
-            } else if (selectedGame === 'live_bullet') {
-            
-            gameName = 'Bullet';
-            gameStats = playerStats.chess_bullet;
 
-            
-            } else if (selectedGame === 'live_rapid') {
-           
+        // fetch player stats 
+        const playerStats = await fetchPlayerStats(username);
+
+        // checks which game was selected
+        // assigns gameName to the name of the game 
+        // assings game stats to 
+        if (selectedGame === 'live_blitz') {   
+            gameName = 'Blitz';
+            gameStats = playerStats.chess_blitz;      
+        } else if (selectedGame === 'live_bullet') {  
+            gameName = 'Bullet';
+            gameStats = playerStats.chess_bullet; 
+        } else if (selectedGame === 'live_rapid') {
             gameName = 'Rapid';
-            gameStats = playerStats.chess_rapid;
-           
-            } 
-            const playerStatsDiv = createPlayerStatsDiv(playerProfile, gameName, gameStats);
-            playerStatsContainer.appendChild(playerStatsDiv); 
+            gameStats = playerStats.chess_rapid; 
+        } 
+        // call createPlayerStatsDiv and pass in three arguments 
+        // store return value in playerStatsDiv
+        const playerStatsDiv = createPlayerStatsDiv(playerProfile, gameName, gameStats);
+        // append playerStatsDiv to parent div 
+        playerStatsContainer.appendChild(playerStatsDiv); 
     }
 }
 
@@ -398,7 +408,7 @@ async function fetchPlayerProfilesForSelectedTitles() {
     // titled player container 
     const  titledPlayersContainer = document.getElementById('titled-player-profiles');
     // selected country 
-    const titledPlayerSelectedCounty = document.getElementById('titled-player-selected-countries').value;
+    const selectedCounty = document.getElementById('titled-player-selected-countries').value;
     // array to store titles 
     const selectedTitles = [];
 
@@ -413,6 +423,7 @@ async function fetchPlayerProfilesForSelectedTitles() {
 
         // array of titled player usernames 
         const titledPlayerUsernames = titledPlayerUsernamesResponse.players; // access the players array 
+
         // loop through array of titled usernames 
         for (const username of titledPlayerUsernames) {
             // at each iteration fetch the player profile 
@@ -424,7 +435,7 @@ async function fetchPlayerProfilesForSelectedTitles() {
             const playerCountry = await fetchPlayerCountry(countryCode);
 
             // filtering the country data by using 'continue' if the expression returns false 
-            if (titledPlayerSelectedCounty !== 'all' && countryCode !== titledPlayerSelectedCounty) continue; 
+            if (selectedCounty !== 'all' && countryCode !== selectedCounty) continue; 
 
             // create aa title player div 
             const titledPlayerProfileDiv = createTitlePlayerDiv(titledPlayerProfile, playerCountry);
@@ -436,13 +447,15 @@ async function fetchPlayerProfilesForSelectedTitles() {
 
 // div to display title player data 
 function createTitlePlayerDiv(profile, country) {
+
+     // styling the div
     const titledPlayerProfileDiv = document.createElement('div');
     titledPlayerProfileDiv.style.border = '1px solid #ddd';
     titledPlayerProfileDiv.style.borderRadius = '10px';
     titledPlayerProfileDiv.style.backgroundColor = "rgb(255, 193, 150";
     titledPlayerProfileDiv.style.padding = '10px';
     titledPlayerProfileDiv.style.margin = '5px';
-
+    
     // check if player is a streamer 
     // if so, then a link to the players streaming channel will be displayed 
     // else display player is not a stereamer 
@@ -455,7 +468,7 @@ function createTitlePlayerDiv(profile, country) {
     }
    
         titledPlayerProfileDiv.innerHTML = `
-             <img src="${profile.avatar}" alt="${profile.username}" style="width: 200px; height: 200px;">
+             <img src="${profile.avatar}" alt="${profile.username}" style="width: 150px; height: 150px;">
              <p><strong>Player Name:</strong> ${profile.name}</p>
              <p><strong>Username:</strong> ${profile.username}</p>
              <p><strong>Title:</strong> ${profile.title}</p>
@@ -487,6 +500,7 @@ async function fetchLeaderboards() {
 // div to display leaderboard data 
 function createLeaderboardDiv(player, playerStats, country, gameType) {
 
+     // styling the div
     const leaderboardDiv = document.createElement('div');
     leaderboardDiv.style.border = '1px solid #ddd';
     leaderboardDiv.style.backgroundColor = "rgb(255, 193, 150";
@@ -497,10 +511,10 @@ function createLeaderboardDiv(player, playerStats, country, gameType) {
        leaderboardDiv.innerHTML = `
                <h3>${gameType}</h3>
                <p><strong>Rank:</strong> ${player.rank}</p>
-               <p><strong>Score:</strong> ${player.score}</p>
                <img src="${player.avatar}" alt="${player.username}" style="width: 200px; height: 200px;">
                <p><strong>Player Name:</strong> ${player.name}</p>
                <p><strong>Username:</strong> ${player.username}</p>
+               <p><strong>Score:</strong> ${player.score}</p>
                <p><strong>Title:</strong> ${player.title}</p>
                <p><strong>Country:</strong> ${country}</p>
                <p><strong>Current Rating:</strong> ${playerStats.chess_blitz.last.rating}</p>
@@ -530,7 +544,7 @@ async function fetchFilteredLeaderboards() {
     // fetch the leaderboard data 
     const leaderboardsResponse = await fetchLeaderboards();
     
-   // fileer leaderboards by game type 
+   // filter leaderboards by game type 
    const dailyLeaderboard = leaderboardsResponse.daily; 
    const blitzLeaderboard = leaderboardsResponse.live_blitz;
    const bulletLeaderboard = leaderboardsResponse.live_bullet;
@@ -538,47 +552,43 @@ async function fetchFilteredLeaderboards() {
 
    //console.log(blitzLeaderboard);
 
-  let currentLeaderboard;
-  let gameType;
+    let currentLeaderboard;
+    let gameName;
         
+    // checks which game was selected
+        // assigns gameName to the name of the game 
+        // assings currentLeaderboard to the leaderboard choosen game 
         if (selectedGame === 'chess_daily') {
-        currentLeaderboard = dailyLeaderboard;
-        gameType = 'Chess Daily';
-        console.log(currentLeaderboard);
-        console.log(selectedGame);
+            currentLeaderboard = dailyLeaderboard;
+            gameName = 'Chess Daily';
         } else if (selectedGame === 'live_blitz') {
-        currentLeaderboard = blitzLeaderboard;
-        gameType = 'Blitz'
-        console.log(currentLeaderboard);
-        console.log(selectedGame);
+            currentLeaderboard = blitzLeaderboard;
+            gameName = 'Blitz'
         } else if (selectedGame === 'live_bullet') {
-        currentLeaderboard = bulletLeaderboard;
-        gameType = 'Bullet'
-        console.log(currentLeaderboard);
-        console.log(selectedGame);
+            currentLeaderboard = bulletLeaderboard;
+            gameName = 'Bullet'
         } else if (selectedGame === 'live_rapid') {
-        currentLeaderboard = rapidLeaderboard;
-        gameType = 'Rapid'
-        console.log(currentLeaderboard);
-        console.log(selectedGame);
+            currentLeaderboard = rapidLeaderboard;
+            gameName = 'Rapid'
         }
 
-    
-  for (player of currentLeaderboard) {
+    // loop though leaderboards 
+    for (player of currentLeaderboard) {
 
-    //console.log(player)
-    const playerStats = await fetchPlayerStats(player.username);
-  
-    console.log(playerStats)
-    // extracting the country code: 
-    const countryUrl = player.country; // returns a string (country url) 
-    const countryCode = extractPlayerCountryCode(countryUrl); // extract the country code form url
-    //fetch the country name 
-    const playerCountry = await fetchPlayerCountry(countryCode);
-    // create div and append
-    const leaderboardDiv = createLeaderboardDiv(player, playerStats, playerCountry, gameType);
-    leaderboardContainer.appendChild(leaderboardDiv);
-  }
+        // fetch player stats 
+        const playerStats = await fetchPlayerStats(player.username);
+    
+       
+        // extracting the country code: 
+        const countryUrl = player.country; // returns a string (country url) 
+        const countryCode = extractPlayerCountryCode(countryUrl); // extract the country code form url
+        //fetch the country name 
+        const playerCountry = await fetchPlayerCountry(countryCode);
+
+        // create div and append to parent 
+        const leaderboardDiv = createLeaderboardDiv(player, playerStats, playerCountry, gameType);
+        leaderboardContainer.appendChild(leaderboardDiv);
+    }
 }
 
 //---------------------- Live Streamers Functinos ------------------------------
@@ -656,19 +666,19 @@ async function fetchSelectedLiveStreamers() {
 function createLiveStreamerDiv(profile, country, liveStream) {
 
     const liveStreamerDiv = document.createElement('div');
-        liveStreamerDiv.style.border = '2px solid #ddd';
-        liveStreamerDiv.style.backgroundColor = "rgb(255, 193, 150";
-        liveStreamerDiv.style.borderRadius = '10px';
-        liveStreamerDiv.style.padding = '10px';
-        liveStreamerDiv.style.margin = '5px';
+    liveStreamerDiv.style.border = '2px solid #ddd';
+    liveStreamerDiv.style.backgroundColor = "rgb(255, 193, 150";
+    liveStreamerDiv.style.borderRadius = '10px';
+    liveStreamerDiv.style.padding = '10px';
+    liveStreamerDiv.style.margin = '5px';
 
-             liveStreamerDiv.innerHTML = `
-             <img src="${profile.avatar}" alt="${profile.username}" style="width: 200px; height: 200px;">
-            
-             <p><strong>Username:</strong> ${profile.username}</p>
-             <p><strong>Title:</strong> ${profile.title}</p>
-             <p><strong>Country:</strong> ${country}</p>
-             <p><strong>Watch Live Stream:</strong> <a href="${liveStream}" target="_blank">Twitch</a></p>
+        liveStreamerDiv.innerHTML = `
+        <img src="${profile.avatar}" alt="${profile.username}" style="width: 200px; height: 200px;">
+    
+        <p><strong>Username:</strong> ${profile.username}</p>
+        <p><strong>Title:</strong> ${profile.title}</p>
+        <p><strong>Country:</strong> ${country}</p>
+        <p><strong>Watch Live Stream:</strong> <a href="${liveStream}" target="_blank">Twitch</a></p>
      `;
      return liveStreamerDiv; 
 }
