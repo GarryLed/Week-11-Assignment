@@ -1,95 +1,101 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="utf-8">
 
     <title>Final Assignment Part 1</title>
     <link rel="stylesheet" href="style.css">
 
-  </head>
-  <body>
+</head>
+
+<body>
     <header>
-      <h1>Chess.Com API</h1>
+        <h1>Chess.Com API</h1>
     </header>
-<section id="player-stats-section">
-    <div>
-      <h2>Player Stats</h2>
-      <h3>Select Players</h3>
-      <label><input type="checkbox" value="magnuscarlsen" id="player-magnus" /> Magnus Carlson</label><br />
-      <label><input type="checkbox" value="hikaru" id="player-hikaru" />Hikaru Nakamura</label><br />
-      <label><input type="checkbox" value="nikotheodorou" id="player-nikolas" />Nikolas Theodorou</label><br />
-      <label><input type="checkbox" value="arkadiykhromaev" id="player-arkadiy" />Arkadiy Khromaev</label><br />
+    <!-----------------------player stats section ------------------------------------>
+    <section id="player-stats-section">
+        <div>
+            <h2>Player Stats</h2>
+            <h3>Select Players</h3>
+            <label><input type="checkbox" value="magnuscarlsen" id="player-magnus" /> Magnus Carlson</label><br />
+            <label><input type="checkbox" value="hikaru" id="player-hikaru" />Hikaru Nakamura</label><br />
+            <label><input type="checkbox" value="nikotheodorou" id="player-nikolas" />Nikolas Theodorou</label><br />
+            <label><input type="checkbox" value="arkadiykhromaev" id="player-arkadiy" />Arkadiy Khromaev</label><br />
 
-    <label for="filter-games"><strong>Games:</strong></label>
-    <select id="live-games" name="chess-games">
-      <option value="live_blitz">Blitz</option>
-      <option value="live_bullet">Bullet</option>
-      <option value="live_rapid">Rapid</option>
-    </select>
-  </div>
-  <button id="get-player-stats">Get Player Stats</button>
-  <div id="player-stats"></div>
-  </section>  
-  <!-----------------------End of section one------------------------------------>
-  <section id="player-titles-section">
-    <div>
-      <h2>Player Titles</h2>
-      <h3>Select Titles:</h3>
-      <label><input type="checkbox" value="GM" id="grand-master" /> Grand Masters (GM)</label><br />
-      <label><input type="checkbox" value="WGM" id="womens-grand-master" /> Womens Grand Masters (WGM)</label><br />
-      <label><input type="checkbox" value="IM" id="internatioinal-master" /> International Masters (IM)</label><br />
-      <label><input type="checkbox" value="WIM" id="womens-international-master" /> Womens International Masters (WIM)</label><br />
-  </div>
-  <div>
-    <label for="countries"><strong>Countries:</strong></label>
-<select id="titled-player-selected-countries" name="countries">
-  <option value="all">All Countries</option>
-  <option value="US">United States</option>
-  <option value="RU">Russia</option>
-  <option value="UA">Ukraine</option>
-  <option value="IN">India</option>
+            <label for="filter-games"><strong>Games:</strong></label>
+            <select id="live-games" name="chess-games">
+                <option value="live_blitz">Blitz</option>
+                <option value="live_bullet">Bullet</option>
+                <option value="live_rapid">Rapid</option>
+            </select>
+        </div>
+        <button id="get-player-stats">Get Player Stats</button>
+        <div id="player-stats"></div>
+    </section>
 
-</select>
-</div>
- 
-    <button id="get-titled-player-profiles">Get Titled Player Profiles</button>
-    <div id="titled-player-profiles"></div>
-  </section>
-  <!-------------------End of Player titles section-------------------------->
- <section id="leaderboards-section">
-  <div class="leaderboard">
-    <h2>Leaderboards</h2>
-  
-    <label for=""><strong>Games:</strong></label>
-    <select id="leaderboard-games-filter">
-      <option value="live_blitz">Blitz</option>
-      <option value="live_bullet">Bullet</option>
-      <option value="live_rapid">Rapid</option>
-      <option value="chess_daily">Daily Chess</option>
-    </select>
-  
-  </div>
-  <button id="get-leaderboard-results">Get Leaderboard Results</button>
+    <!----------------------- Titled player section  ------------------------------------>
+    <section id="player-titles-section">
+        <div>
+            <h2>Player Titles</h2>
+            <h3>Select Titles:</h3>
+            <label><input type="checkbox" value="GM" id="grand-master" /> Grand Masters (GM)</label><br />
+            <label><input type="checkbox" value="WGM" id="womens-grand-master" /> Womens Grand Masters (WGM)</label><br />
+            <label><input type="checkbox" value="IM" id="internatioinal-master" /> International Masters (IM)</label><br />
+            <label><input type="checkbox" value="WIM" id="womens-international-master" /> Womens International Masters (WIM)</label><br />
+        </div>
+        <div>
+            <label for="countries"><strong>Countries:</strong></label>
+            <select id="titled-player-selected-countries" name="countries">
+                <option value="all">All Countries</option>
+                <option value="US">United States</option>
+                <option value="RU">Russia</option>
+                <option value="UA">Ukraine</option>
+                <option value="IN">India</option>
 
-  <div id="leaderboards"></div>
-</section>  
+            </select>
+        </div>
 
-<!---------------------Streamers section --------------------------->
-<section id="streamers-section">
-  <div>
-    <h2>Watch Live Chess Streamers</h2>
-    <label for="countries"><strong>Countries:</strong></label>
-<select id="streamer-country-filter" name="countries">
-  <option value="all">All Countries</option>
-      <option value="US">United States</option>
-      <option value="IE">Ireland</option>
-      <option value="IT">Italy</option>
-      <option value="PL">Poland</option>
-  </select>
-</div>
-<button id="get-live-streamers">Get Live Streamers</button>
-<div id="streamer-container"></div>
-</section>
-      <script src="script.js"></script>
-  </body>
+        <button id="get-titled-player-profiles">Get Titled Player Profiles</button>
+        <div id="titled-player-profiles"></div>
+    </section>
+
+    <!------------------- Leaderboards section -------------------------->
+    <section id="leaderboards-section">
+        <div class="leaderboard">
+            <h2>Leaderboards</h2>
+
+            <label for=""><strong>Games:</strong></label>
+            <select id="leaderboard-games-filter">
+                <option value="live_blitz">Blitz</option>
+                <option value="live_bullet">Bullet</option>
+                <option value="live_rapid">Rapid</option>
+                <option value="chess_daily">Daily Chess</option>
+            </select>
+
+        </div>
+        <button id="get-leaderboard-results">Get Leaderboard Results</button>
+
+        <div id="leaderboards"></div>
+    </section>
+
+    <!--------------------- Streamers section --------------------------->
+    <section id="streamers-section">
+        <div>
+            <h2>Watch Live Chess Streamers</h2>
+            <label for="countries"><strong>Countries:</strong></label>
+            <select id="streamer-country-filter" name="countries">
+                <option value="all">All Countries</option>
+                <option value="US">United States</option>
+                <option value="IE">Ireland</option>
+                <option value="IT">Italy</option>
+                <option value="PL">Poland</option>
+            </select>
+        </div>
+        <button id="get-live-streamers">Get Live Streamers</button>
+        <div id="streamer-container"></div>
+    </section>
+    <script src="script.js"></script>
+</body>
+
 </html>

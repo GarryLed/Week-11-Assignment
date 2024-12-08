@@ -1,4 +1,3 @@
-
 /*
 Breaking the problem down into parts: 
 
@@ -227,25 +226,26 @@ CODE:
 */
 
 // Event listener for the DOMContent 
-document.addEventListener('DOMContentLoaded', async function () {
+document.addEventListener('DOMContentLoaded', async function() {
     try {
-      
-// adding an event listener to the player stats button 
-document.getElementById('get-player-stats').addEventListener('click', fetchStatsForSelectedPlayers);
 
-// adding an event listener to the titled player button 
-document.getElementById('get-titled-player-profiles').addEventListener('click', fetchPlayerProfilesForSelectedTitles);
+        // adding an event listener to the player stats button 
+        document.getElementById('get-player-stats').addEventListener('click', fetchStatsForSelectedPlayers);
 
-// adding an event listener to the leaderboard results button 
-document.getElementById('get-leaderboard-results').addEventListener('click', fetchFilteredLeaderboards);
+        // adding an event listener to the titled player button 
+        document.getElementById('get-titled-player-profiles').addEventListener('click', fetchPlayerProfilesForSelectedTitles);
 
-// adding an event listener to the liverstreamers button 
-document.getElementById('get-live-streamers').addEventListener('click', fetchSelectedLiveStreamers);
-      
+        // adding an event listener to the leaderboard results button 
+        document.getElementById('get-leaderboard-results').addEventListener('click', fetchFilteredLeaderboards);
+
+        // adding an event listener to the liverstreamers button 
+        document.getElementById('get-live-streamers').addEventListener('click', fetchSelectedLiveStreamers);
+
     } catch (error) {
         console.error('Oops, an error occured', error);
     }
 });
+
 
 // fetch player profiles 
 // takes username as parameter 
@@ -263,12 +263,13 @@ async function fetchPlayerProfile(username) {
         return null;
     }
 }
-  
+
+// ===================== Player Stats ==========================================
 // fetch player stats 
 // takes usernames as parameter 
 async function fetchPlayerStats(username) {
     const url = `https://api.chess.com/pub/player/${username}/stats`;
-        
+
     try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -282,19 +283,19 @@ async function fetchPlayerStats(username) {
 }
 
 // dynamically create a player stats div and populate the inner HTML 
-function createPlayerStatsDiv(player, gameName, playerStats ) {
-    
+function createPlayerStatsDiv(player, gameName, playerStats) {
+
     // styling the div
-        const playerStatsDiv = document.createElement('div');
-        playerStatsDiv.style.border = '1px solid #ddd';
-        playerStatsDiv.style.borderRadius = '10px';
-        playerStatsDiv.style.backgroundColor = "rgb(255, 193, 150";
-        playerStatsDiv.style.padding = '5px';
-        playerStatsDiv.style.margin = '5px';
- 
-      
-        // dynamically displaying content 
-        playerStatsDiv.innerHTML = `
+    const playerStatsDiv = document.createElement('div');
+    playerStatsDiv.style.border = '1px solid #ddd';
+    playerStatsDiv.style.borderRadius = '10px';
+    playerStatsDiv.style.backgroundColor = "rgb(255, 193, 150";
+    playerStatsDiv.style.padding = '5px';
+    playerStatsDiv.style.margin = '5px';
+
+
+    // dynamically displaying content 
+    playerStatsDiv.innerHTML = `
                <h3>${gameName}</h3>
                <img src="${player.avatar}" alt="${player.username}" style="width: 200px; height: 200px;">
                <p><strong>Player Name:</strong> ${player.name}</p>
@@ -307,11 +308,11 @@ function createPlayerStatsDiv(player, gameName, playerStats ) {
                <p><strong>Total Draws:</strong> ${playerStats.record.draw}</p>
              
    `;
-   return playerStatsDiv;   
+    return playerStatsDiv;
 }
 
 // async function to fetch stats for selected players 
-async function fetchStatsForSelectedPlayers() {  
+async function fetchStatsForSelectedPlayers() {
     // find all the checked checkboxes
     const checkboxes = document.querySelectorAll(`input[type="checkbox"]:checked`);
 
@@ -323,11 +324,11 @@ async function fetchStatsForSelectedPlayers() {
 
     // return the selected game form the dropdown menu 
     const selectedGame = document.getElementById('live-games').value;
-   
+
     // loop through checkboxes 
     // at each iteration push each element to the selectedPlayers array
     checkboxes.forEach(checkbox => {
-        selectedPlayers.push(checkbox.value); 
+        selectedPlayers.push(checkbox.value);
     });
 
     // empty the container content 
@@ -336,7 +337,7 @@ async function fetchStatsForSelectedPlayers() {
     // variables for filtering data for display
     let gameName;
     let gameStats;
-        
+
     // for..of loop lets us use the 'await' keyword within the loop 
     for (const username of selectedPlayers) {
         // fetch the player profile 
@@ -348,21 +349,21 @@ async function fetchStatsForSelectedPlayers() {
         // checks which game was selected
         // assigns gameName to the name of the game 
         // assings game stats to 
-        if (selectedGame === 'live_blitz') {   
+        if (selectedGame === 'live_blitz') {
             gameName = 'Blitz';
-            gameStats = playerStats.chess_blitz;      
-        } else if (selectedGame === 'live_bullet') {  
+            gameStats = playerStats.chess_blitz;
+        } else if (selectedGame === 'live_bullet') {
             gameName = 'Bullet';
-            gameStats = playerStats.chess_bullet; 
+            gameStats = playerStats.chess_bullet;
         } else if (selectedGame === 'live_rapid') {
             gameName = 'Rapid';
-            gameStats = playerStats.chess_rapid; 
-        } 
+            gameStats = playerStats.chess_rapid;
+        }
         // call createPlayerStatsDiv and pass in three arguments 
         // store return value in playerStatsDiv
         const playerStatsDiv = createPlayerStatsDiv(playerProfile, gameName, gameStats);
         // append playerStatsDiv to parent div 
-        playerStatsContainer.appendChild(playerStatsDiv); 
+        playerStatsContainer.appendChild(playerStatsDiv);
     }
 }
 
@@ -371,7 +372,7 @@ async function fetchStatsForSelectedPlayers() {
 // fetch titled player usernames 
 async function fetchTitledPlayerUsernames(title) {
     const url = `https://api.chess.com/pub/titled/${title}`;
-        
+
     try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -386,13 +387,13 @@ async function fetchTitledPlayerUsernames(title) {
 
 async function fetchPlayerCountry(countryCode) {
     const url = `https://api.chess.com/pub/country/${countryCode}`;
-        
+
     try {
         const response = await fetch(url);
         if (!response.ok) {
             throw new Error(`EHTTP Error! Status: ${response.status}`);
         }
-        const country =  await response.json();
+        const country = await response.json();
         return country.name; // returns the name of the country 
     } catch (error) {
         console.error(error);
@@ -406,7 +407,7 @@ async function fetchPlayerProfilesForSelectedTitles() {
     // get data from checkboxes
     const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
     // titled player container 
-    const  titledPlayersContainer = document.getElementById('titled-player-profiles');
+    const titledPlayersContainer = document.getElementById('titled-player-profiles');
     // selected country 
     const selectedCounty = document.getElementById('titled-player-selected-countries').value;
     // array to store titles 
@@ -435,39 +436,39 @@ async function fetchPlayerProfilesForSelectedTitles() {
             const playerCountry = await fetchPlayerCountry(countryCode);
 
             // filtering the country data by using 'continue' if the expression returns false 
-            if (selectedCounty !== 'all' && countryCode !== selectedCounty) continue; 
+            if (selectedCounty !== 'all' && countryCode !== selectedCounty) continue;
 
             // create aa title player div 
             const titledPlayerProfileDiv = createTitlePlayerDiv(titledPlayerProfile, playerCountry);
             // append title player div to parent div 
-            titledPlayersContainer.appendChild(titledPlayerProfileDiv);    
-    }
+            titledPlayersContainer.appendChild(titledPlayerProfileDiv);
+        }
     }
 }
 
 // div to display title player data 
 function createTitlePlayerDiv(profile, country) {
 
-     // styling the div
+    // styling the div
     const titledPlayerProfileDiv = document.createElement('div');
     titledPlayerProfileDiv.style.border = '1px solid #ddd';
     titledPlayerProfileDiv.style.borderRadius = '10px';
     titledPlayerProfileDiv.style.backgroundColor = "rgb(255, 193, 150";
     titledPlayerProfileDiv.style.padding = '10px';
     titledPlayerProfileDiv.style.margin = '5px';
-    
+
     // check if player is a streamer 
     // if so, then a link to the players streaming channel will be displayed 
     // else display player is not a stereamer 
     const isStreamer = profile.is_streamer; // returns true or false
     let streamerMessage;
     if (isStreamer) {
-         streamerMessage = `<p><strong>Streaming Platform:</strong> <a href="${profile.twitch_url}" target="_blank">Twitch</a></p>`;
+        streamerMessage = `<p><strong>Streaming Platform:</strong> <a href="${profile.twitch_url}" target="_blank">Twitch</a></p>`;
     } else {
-         streamerMessage = `<p>Not a Streamer</p>`;
+        streamerMessage = `<p>Not a Streamer</p>`;
     }
-   
-        titledPlayerProfileDiv.innerHTML = `
+
+    titledPlayerProfileDiv.innerHTML = `
              <img src="${profile.avatar}" alt="${profile.username}" style="width: 150px; height: 150px;">
              <p><strong>Player Name:</strong> ${profile.name}</p>
              <p><strong>Username:</strong> ${profile.username}</p>
@@ -475,7 +476,7 @@ function createTitlePlayerDiv(profile, country) {
              <p><strong>Country:</strong> ${country}</p>
              ${streamerMessage}
          `;
-         return titledPlayerProfileDiv;
+    return titledPlayerProfileDiv;
 
 }
 
@@ -483,7 +484,7 @@ function createTitlePlayerDiv(profile, country) {
 
 // fetch the leaderboard data 
 async function fetchLeaderboards() {
-    
+
     try {
         const response = await fetch('https://api.chess.com/pub/leaderboards');
         if (!response.ok) {
@@ -494,21 +495,22 @@ async function fetchLeaderboards() {
         console.error(error);
         return null;
     }
-    
+
 }
 
-// div to display leaderboard data 
+// div to display leaderboard data
+// function takes 4 parameters: palyer, the player stats, player country and the game type (for dynamically inserting game) 
 function createLeaderboardDiv(player, playerStats, country, gameType) {
 
-     // styling the div
+    // styling the div
     const leaderboardDiv = document.createElement('div');
     leaderboardDiv.style.border = '1px solid #ddd';
     leaderboardDiv.style.backgroundColor = "rgb(255, 193, 150";
     leaderboardDiv.style.borderRadius = '10px';
     leaderboardDiv.style.padding = '10px';
     leaderboardDiv.style.margin = '5px';
-    
-       leaderboardDiv.innerHTML = `
+
+    leaderboardDiv.innerHTML = `
                <h3>${gameType}</h3>
                <p><strong>Rank:</strong> ${player.rank}</p>
                <img src="${player.avatar}" alt="${player.username}" style="width: 200px; height: 200px;">
@@ -524,61 +526,57 @@ function createLeaderboardDiv(player, playerStats, country, gameType) {
                <p><strong>Total Draws:</strong> ${playerStats.chess_blitz.record.draw}</p>
              
    `;
-return leaderboardDiv; 
-     
-} 
+    return leaderboardDiv;
+
+}
 
 // fetch filtered leaderboard data 
 async function fetchFilteredLeaderboards() {
     // create a leaderboard div container 
-    const  leaderboardContainer = document.getElementById('leaderboards');
+    const leaderboardContainer = document.getElementById('leaderboards');
 
     // get leaderboard games form dropdown menu 
     const selectedGame = document.getElementById('leaderboard-games-filter').value;
 
-    // get leaderboard countries from dropdown menu 
-    //const leaderboardSelectedCountries = document.getElementById('leaderboard-country-filter').value;
-    
-    leaderboardContainer.innerHTML = ''; 
-    
+    leaderboardContainer.innerHTML = '';
+
     // fetch the leaderboard data 
     const leaderboardsResponse = await fetchLeaderboards();
-    
-   // filter leaderboards by game type 
-   const dailyLeaderboard = leaderboardsResponse.daily; 
-   const blitzLeaderboard = leaderboardsResponse.live_blitz;
-   const bulletLeaderboard = leaderboardsResponse.live_bullet;
-   const rapidLeaderboard = leaderboardsResponse.live_rapid; 
 
-   //console.log(blitzLeaderboard);
+    // filter leaderboard data by game type for filtering data 
+    const dailyLeaderboard = leaderboardsResponse.daily;
+    const blitzLeaderboard = leaderboardsResponse.live_blitz;
+    const bulletLeaderboard = leaderboardsResponse.live_bullet;
+    const rapidLeaderboard = leaderboardsResponse.live_rapid;
+
+    //console.log(blitzLeaderboard);
 
     let currentLeaderboard;
     let gameName;
-        
+
     // checks which game was selected
-        // assigns gameName to the name of the game 
-        // assings currentLeaderboard to the leaderboard choosen game 
-        if (selectedGame === 'chess_daily') {
-            currentLeaderboard = dailyLeaderboard;
-            gameName = 'Chess Daily';
-        } else if (selectedGame === 'live_blitz') {
-            currentLeaderboard = blitzLeaderboard;
-            gameName = 'Blitz'
-        } else if (selectedGame === 'live_bullet') {
-            currentLeaderboard = bulletLeaderboard;
-            gameName = 'Bullet'
-        } else if (selectedGame === 'live_rapid') {
-            currentLeaderboard = rapidLeaderboard;
-            gameName = 'Rapid'
-        }
+    // assigns gameName to the name of the game 
+    // assings currentLeaderboard to the leaderboard choosen game 
+    if (selectedGame === 'chess_daily') {
+        currentLeaderboard = dailyLeaderboard;
+        gameName = 'Chess Daily';
+    } else if (selectedGame === 'live_blitz') {
+        currentLeaderboard = blitzLeaderboard;
+        gameName = 'Blitz'
+    } else if (selectedGame === 'live_bullet') {
+        currentLeaderboard = bulletLeaderboard;
+        gameName = 'Bullet'
+    } else if (selectedGame === 'live_rapid') {
+        currentLeaderboard = rapidLeaderboard;
+        gameName = 'Rapid'
+    }
 
     // loop though leaderboards 
     for (player of currentLeaderboard) {
 
         // fetch player stats 
         const playerStats = await fetchPlayerStats(player.username);
-    
-       
+
         // extracting the country code: 
         const countryUrl = player.country; // returns a string (country url) 
         const countryCode = extractPlayerCountryCode(countryUrl); // extract the country code form url
@@ -586,7 +584,7 @@ async function fetchFilteredLeaderboards() {
         const playerCountry = await fetchPlayerCountry(countryCode);
 
         // create div and append to parent 
-        const leaderboardDiv = createLeaderboardDiv(player, playerStats, playerCountry, gameType);
+        const leaderboardDiv = createLeaderboardDiv(player, playerStats, playerCountry, gameName);
         leaderboardContainer.appendChild(leaderboardDiv);
     }
 }
@@ -595,76 +593,78 @@ async function fetchFilteredLeaderboards() {
 
 // fetch streames 
 async function fetchStreamers() {
-        try {
-            const response = await fetch('https://api.chess.com/pub/streamers');
-            if (!response.ok) {
-                throw new Error(`EHTTP Error! Status: ${response.status}`);
-            }
-            return await response.json();
-        } catch (error) {
-            console.error(error);
-            return null;
+    try {
+        const response = await fetch('https://api.chess.com/pub/streamers');
+        if (!response.ok) {
+            throw new Error(`EHTTP Error! Status: ${response.status}`);
         }
+        return await response.json();
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
 }
 
 // fiilter streamers by titles and countries 
 async function fetchSelectedLiveStreamers() {
-     // create a streamer div container 
-     const  liveStreamerContainer = document.getElementById('streamer-container');
+    // create a streamer div container 
+    const liveStreamerContainer = document.getElementById('streamer-container');
+
+    // get leaderboard countries from dropdown menu 
+    const selectedCountries = document.getElementById('streamer-country-filter').value;
+
+    liveStreamerContainer.innerHTML = '';
+
+    const streamerResponse = await fetchStreamers();
     
-     // get leaderboard countries from dropdown menu 
-     const streamerSelectedCountries = document.getElementById('streamer-country-filter').value;
- 
-     liveStreamerContainer.innerHTML = ''; 
+    // get all the streamers 
+    const streamers = streamerResponse.streamers;
 
-     const streamerResponse = await fetchStreamers();
-     console.log(streamerResponse);
+    
+    // variables for filtering data below 
+    let liveStream = ``;
+    let streamerCountry = ``;
 
-     const streamers = streamerResponse.streamers;
-
-    // console.log(streamers);
-
-     let liveStream =``;
-     let streamerCountry = ``;
-
-     for (const streamer of streamers) {
+    for (const streamer of streamers) {
 
         // returns a boolean true if streamer is live 
-         const isLive = streamer.is_live;
+        const isLive = streamer.is_live;
 
-         if (!isLive) continue; // if a streamer is not live then skip to next iteration 
+        if (!isLive) continue; // if a streamer is not live then skip to next iteration 
 
-         // get streamer platforms (an array)
-         const streamerPlatforms = streamer.platforms;
+        // get streamer platforms (an array)
+        const streamerPlatforms = streamer.platforms;
 
         // loop through each streamers playforms 
         // assign the liveSteam variable to the live stream url 
-         for (const platform of streamerPlatforms) {
-            console.log(platform.stream_url)
+        for (const platform of streamerPlatforms) {
             liveStream = platform.stream_url;
-         }
+        }
 
-            streamerProfile = await fetchPlayerProfile(streamer.username)
-            // fetch streamer country 
-            // Extracting the country code: 
-            const countryUrl = streamerProfile.country; // returns a string (country url) 
-            const countryCode = extractPlayerCountryCode(countryUrl); // extract the country code form url
-            // fetch the country name 
-            streamerCountry = await fetchPlayerCountry(countryCode);
+        // fetch the streamer profile 
+        streamerProfile = await fetchPlayerProfile(streamer.username);
 
-    
-            // filtering the country data by using 'continue' if the expression returns false 
-            if (streamerSelectedCountries !== 'all' && countryCode !== streamerSelectedCountries) continue; 
-    // create div and append
-    const liveStreamerDiV = createLiveStreamerDiv(streamerProfile, streamerCountry, liveStream);
-    liveStreamerContainer.appendChild(liveStreamerDiV);
+        // fetch streamer country 
+        // Extracting the country code: 
+        const countryUrl = streamerProfile.country; // returns a string (country url) 
+        const countryCode = extractPlayerCountryCode(countryUrl); // extract the country code form url
+        // fetch the country name 
+        streamerCountry = await fetchPlayerCountry(countryCode);
 
-     }
+
+        // filtering the country data by using 'continue' if the expression returns false 
+        if (selectedCountries !== 'all' && countryCode !== selectedCountries) continue;
+        // create div and append
+        const liveStreamerDiV = createLiveStreamerDiv(streamerProfile, streamerCountry, liveStream);
+        liveStreamerContainer.appendChild(liveStreamerDiV);
+
+    }
 }
 
 // create div to hold and display live streamer data 
 function createLiveStreamerDiv(profile, country, liveStream) {
 
+    // style the div 
     const liveStreamerDiv = document.createElement('div');
     liveStreamerDiv.style.border = '2px solid #ddd';
     liveStreamerDiv.style.backgroundColor = "rgb(255, 193, 150";
@@ -672,7 +672,7 @@ function createLiveStreamerDiv(profile, country, liveStream) {
     liveStreamerDiv.style.padding = '10px';
     liveStreamerDiv.style.margin = '5px';
 
-        liveStreamerDiv.innerHTML = `
+    liveStreamerDiv.innerHTML = `
         <img src="${profile.avatar}" alt="${profile.username}" style="width: 200px; height: 200px;">
     
         <p><strong>Username:</strong> ${profile.username}</p>
@@ -680,16 +680,12 @@ function createLiveStreamerDiv(profile, country, liveStream) {
         <p><strong>Country:</strong> ${country}</p>
         <p><strong>Watch Live Stream:</strong> <a href="${liveStream}" target="_blank">Twitch</a></p>
      `;
-     return liveStreamerDiv; 
+    return liveStreamerDiv;
 }
 //------------------------ Helper Function ------------------------------------
 
 // extract country code from string url 
 
-function extractPlayerCountryCode(countryUrl) { 
-    return countryUrl.split("/").pop();  
+function extractPlayerCountryCode(countryUrl) {
+    return countryUrl.split("/").pop();
 }
-
-
-
-

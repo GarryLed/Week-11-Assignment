@@ -28,14 +28,14 @@ Where necessary, I will have a Q&A with students. Assignment Extension Request f
 TODO's
 - [x] create a github repo 
 - [x] pick endpoints and submit for approval by Firday 29th November 
-- [ ] download and render JSON data via an API endpoint or endpoints
-- [ ] dynamically create and style elements to render the data. You cannot use sample code from the Internet.
-- [ ] include on a Word document
+- [x] download and render JSON data via an API endpoint or endpoints
+- [x] dynamically create and style elements to render the data. You cannot use sample code from the Internet.
+- [x] include on a Word document
    - (i) A sample of the JSON data (e.g. one object) 
     - (ii) the data points you will be using and why and 
     - (iii) a rough diagram (e.g. pen and paper screenshot) of how the data will be displayed.
     - (iv) a link to your public GitHub repo should be provided
-- [ ] A distinction level award will require the following:
+- [x] A distinction level award will require the following:
     - The ability to render JSON from more than one endpoint
     - The use of more than one API
     - Elegant design when rendering the endpoint data
